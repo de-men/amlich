@@ -1,6 +1,6 @@
 # licham
 
-A web app that uses [AngularDart](https://webdev.dartlang.org/angular) and
+lich.am web app that uses [AngularDart](https://webdev.dartlang.org/angular) and
 [AngularDart Components](https://webdev.dartlang.org/components).
 
 Created from templates made available by Stagehand under a BSD-style

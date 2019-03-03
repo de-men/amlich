@@ -59,18 +59,13 @@ class TodoListComponent implements OnInit {
   String remove(int index) => items.removeAt(index);
 
   int jdFromDate(int dd, int mm, int yy) {
-    print('jdFromDate: dd=$dd, mm=$mm, yy=$yy');
     int a = (14  - mm) ~/ 12;
-    print('jdFromDate: a=$a');
     int y = yy + 4800 - a;
-    print('jdFromDate: y=$y');
     int m = mm + 12 * a - 3;
-    print('jdFromDate: m=$m');
     int jd = dd + (153 * m + 2) ~/ 5 + 365 * y + y ~/ 4 - y ~/ 100 + y ~/ 400 - 32045;
     if (jd < 2299161) {
         jd = dd + (153 * m + 2) ~/ 5 + 365 * y + y ~/ 4 - 32083;
     }
-    print('jdFromDate: jd=$jd');
     //jd = jd - 1721425;
     return jd;
   }
@@ -151,14 +146,11 @@ class TodoListComponent implements OnInit {
   List<int> convertSolar2Lunar(int dd, int mm, int yy, double timeZone) {
     int lunarDay, lunarMonth, lunarYear, lunarLeap;
     int dayNumber = jdFromDate(dd, mm, yy);
-    print('convertSolar2Lunar: dayNumber=$dayNumber');
     int k = (dayNumber - 2415021.076998695) ~/ 29.530588853;
-    print('convertSolar2Lunar: k=$k');
     int monthStart = getNewMoonDay(k + 1, timeZone);
     if (monthStart > dayNumber) {
         monthStart = getNewMoonDay(k, timeZone);
     }
-    print('convertSolar2Lunar: monthStart=$monthStart');
     int a11 = getLunarMonth11(yy, timeZone);
     int b11 = a11;
     if (a11 >= monthStart) {
@@ -168,10 +160,7 @@ class TodoListComponent implements OnInit {
         lunarYear = yy+1;
         b11 = getLunarMonth11(yy + 1, timeZone);
     }
-    print('convertSolar2Lunar: a11=$a11');
-    print('convertSolar2Lunar: b11=$b11');
     lunarDay = dayNumber - monthStart + 1;
-    print('convertSolar2Lunar: lunarDay=$lunarDay');
     int diff = (monthStart - a11) ~/ 29;
     lunarLeap = 0;
     lunarMonth = diff+11;
