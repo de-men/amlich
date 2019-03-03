@@ -10,8 +10,6 @@ import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'dart:math' as math;
 
-import 'todo_list_service.dart';
-
 @Component(
   selector: 'todo-list',
   styleUrls: ['todo_list_component.css'],
@@ -25,10 +23,9 @@ import 'todo_list_service.dart';
     NgFor,
     NgIf,
   ],
-  providers: [ClassProvider(TodoListService), windowBindings, datepickerBindings],
+  providers: [windowBindings, datepickerBindings],
 )
 class TodoListComponent implements OnInit {
-  final TodoListService todoListService;
 
   List<String> items = [];
   String newTodo = '';
@@ -37,11 +34,9 @@ class TodoListComponent implements OnInit {
   DateFormat weekFormat;
   DateFormat monthYearFormat;
   DateFormat dayMonthYearFormat;
-  TodoListComponent(this.todoListService);
 
   @override
   Future<Null> ngOnInit() async {
-    items = await todoListService.getTodoList();
     initializeDateFormatting("vi", null).then((_) => initDateFormat() );
   }
 
@@ -50,13 +45,6 @@ class TodoListComponent implements OnInit {
     monthYearFormat = DateFormat("MMMM, y", "vi");
     dayMonthYearFormat = DateFormat("d MMMM, y", "vi");
   }
-
-  void add() {
-    items.add(newTodo);
-    newTodo = '';
-  }
-
-  String remove(int index) => items.removeAt(index);
 
   int jdFromDate(int dd, int mm, int yy) {
     int a = (14  - mm) ~/ 12;
