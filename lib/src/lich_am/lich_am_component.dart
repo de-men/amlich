@@ -11,9 +11,9 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'dart:math' as math;
 
 @Component(
-  selector: 'todo-list',
-  styleUrls: ['todo_list_component.css'],
-  templateUrl: 'todo_list_component.html',
+  selector: 'lich-am',
+  styleUrls: ['lich_am_component.css'],
+  templateUrl: 'lich_am_component.html',
   directives: [
     MaterialCheckboxComponent,
     MaterialFabComponent,
@@ -25,7 +25,7 @@ import 'dart:math' as math;
   ],
   providers: [windowBindings, datepickerBindings],
 )
-class TodoListComponent implements OnInit {
+class LichAmComponent implements OnInit {
 
   List<String> items = [];
   String newTodo = '';
