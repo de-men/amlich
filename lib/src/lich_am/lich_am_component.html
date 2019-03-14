@@ -1,21 +1,25 @@
 <!-- Components info: https://webdev.dartlang.org/components -->
-<div style="text-align: justify; text-align-last: center">
+<div style="text-align-last: center">
   <div class="inline-block">
-    <div style="width: 500px; background: indigo; text-align: center; padding: 5px">
-      <p *ngIf="monthYearFormat != null" style="font-size: 20px; color: white">{{singleDateModel.selection('range').start.format(monthYearFormat)}}</p>
+    <div style="width: 512px; background: indigo; text-align: center; padding-top: 2px; padding-bottom: 2px">
+      <p *ngIf="monthYearFormat != null" style="font-size: 24px; color: white">{{singleDateModel.selection('range').start.format(monthYearFormat).toUpperCase()}}</p>
     </div>
     
-    <div style="width: 500px; text-align: center">
-      <p style="font-size: 100px">{{singleDateModel.selection('range').start.day}}</p>
+    <div style="width: 512px; text-align: center">
+      <p style="font-size: 192px; margin-top: 16px; margin-bottom: 16px"><b>{{singleDateModel.selection('range').start.day}}</b></p>
     </div>
     
-    <div style="width: 500px; text-align: center">
-      <p *ngIf="weekFormat != null" style="font-size: 30px">{{singleDateModel.selection('range').start.format(weekFormat)}}</p>
+    <div style="width: 512px; text-align: center">
+      <p *ngIf="weekFormat != null" style="font-size: 24px">{{singleDateModel.selection('range').start.format(weekFormat)}}</p>
     </div>
     
-    <div style="width: 500px; height: 10px; background: gray"></div>
+    <div style="width: 512px; height: 96px; text-align: center; padding-top: 16px">
+      <p *ngIf="idiom != null">{{idiom}}<br/>{{author}}</p>
+    </div>
     
-    <div style="width: 500px; text-align: center">
+    <div style="width: 512px; height: 8px; background: gray"></div>
+    
+    <div style="width: 512px; text-align: center">
       <p *ngIf="dayMonthYearFormat != null" style="font-size: 30px">{{calculate().format(dayMonthYearFormat)}}</p>
     </div>
   </div>

@@ -1,3 +1,6 @@
+import 'dart:html';
+
+import 'package:http/http.dart' as http;
 import 'dart:async';
 
 import 'package:angular/angular.dart';
@@ -25,6 +28,7 @@ import 'dart:math' as math;
     materialInputDirectives,
     NgFor,
     NgIf,
+    coreDirectives
   ],
   providers: [windowBindings, datepickerBindings],
 )
@@ -34,6 +38,9 @@ class LichAmComponent implements OnInit {
   DateFormat monthYearFormat;
   DateFormat dayMonthYearFormat;
   DateFormat ddMMyyyyFormat;
+
+  String idiom;
+  String author;
 
   String formatDate(Date date) => date == null ? '(null)' : date.toString();
 
@@ -49,6 +56,18 @@ class LichAmComponent implements OnInit {
   void onDateChange(Date dateChanged) {
     singleDateModel = singleDateModel.setSelection(CalendarSelection(
         'range', dateChanged, dateChanged));
+    getIdiom();
+  }
+
+  Future<Null> getIdiom() async {
+    var client = new http.Client();
+    try {
+      var splitString = (await client.read("https://us-central1-licham.cloudfunctions.net/idiom")).split('\n');
+      idiom = splitString[0];
+      author = splitString[splitString.length - 1];
+    } finally {
+      client.close();
+    }
   }
 
   void initDateFormat() {
