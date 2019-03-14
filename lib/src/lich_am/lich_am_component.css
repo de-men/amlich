@@ -1,3 +1,11 @@
+.calendar {
+  height: 400px;
+}
+
+.inline-block {
+  display: inline-block;
+}
+
 ul {
   list-style: none;
   padding-left: 0;

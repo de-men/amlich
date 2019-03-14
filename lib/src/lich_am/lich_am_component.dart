@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:angular/angular.dart';
 import 'package:angular_components/angular_components.dart';
 import 'package:angular_components/material_datepicker/material_datepicker.dart';
+import 'package:angular_components/material_datepicker/material_calendar_picker.dart';
 import 'package:angular_components/material_datepicker/module.dart';
 import 'package:angular_components/utils/browser/window/module.dart';
 import 'package:angular_components/model/date/date.dart';
@@ -19,6 +20,8 @@ import 'dart:math' as math;
     MaterialFabComponent,
     MaterialIconComponent,
     MaterialDatepickerComponent,
+    DateInputDirective,
+    MaterialCalendarPickerComponent,
     materialInputDirectives,
     NgFor,
     NgIf,
@@ -27,23 +30,32 @@ import 'dart:math' as math;
 )
 class LichAmComponent implements OnInit {
 
-  List<String> items = [];
-  String newTodo = '';
-
-  Date date = Date.today();
   DateFormat weekFormat;
   DateFormat monthYearFormat;
   DateFormat dayMonthYearFormat;
+  DateFormat ddMMyyyyFormat;
+
+  String formatDate(Date date) => date == null ? '(null)' : date.toString();
+
+  CalendarState singleDateModel =
+      CalendarState.selected([CalendarSelection('range', Date.today(), Date.today())]);
 
   @override
   Future<Null> ngOnInit() async {
+    Intl.defaultLocale = "vi_VN";
     initializeDateFormatting("vi", null).then((_) => initDateFormat() );
+  }
+
+  void onDateChange(Date dateChanged) {
+    singleDateModel = singleDateModel.setSelection(CalendarSelection(
+        'range', dateChanged, dateChanged));
   }
 
   void initDateFormat() {
     weekFormat = DateFormat("EEEE", "vi");
     monthYearFormat = DateFormat("MMMM, y", "vi");
     dayMonthYearFormat = DateFormat("d MMMM, y", "vi");
+    ddMMyyyyFormat = DateFormat('dd/MM/yyyy', "vi");
   }
 
   int jdFromDate(int dd, int mm, int yy) {
@@ -171,6 +183,7 @@ class LichAmComponent implements OnInit {
   }
 
   Date calculate() {
+    var date = singleDateModel.selection('range').start;
     List<int> result = convertSolar2Lunar(date.day, date.month, date.year, 7);
     return Date(result[2], result[1], result[0]);
   }
