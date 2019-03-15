@@ -33,8 +33,8 @@ class LichAmComponent implements OnInit {
   Date minDate = Date.today().add(years: -1000);
   Date maxDate = Date.today().add(years: 1000);
   DateFormat weekFormat;
+  DateFormat monthFormat;
   DateFormat monthYearFormat;
-  DateFormat dayMonthYearFormat;
   DateFormat ddMMyyyyFormat;
 
   String idiom;
@@ -44,15 +44,21 @@ class LichAmComponent implements OnInit {
 
   CalendarState singleDateModel =
       CalendarState.selected([CalendarSelection('range', Date.today(), Date.today())]);
+  Date lunarDate;
+  String lunarMonth;
 
   @override
   Future<Null> ngOnInit() async {
     Intl.defaultLocale = "vi_VN";
-    initializeDateFormatting("vi", null).then((_) => initDateFormat() );
+    initializeDateFormatting("vi", null).then((_) => initDateFormat());
+    lunarDate = calculate(Date.today());
+    lunarMonth =getLunarMonth(lunarDate.month);
   }
 
   void onDateChange(Date dateChanged) {
     singleDateModel = singleDateModel.setSelection(CalendarSelection('range', dateChanged, dateChanged));
+    lunarDate =calculate(dateChanged);
+    lunarMonth =getLunarMonth(lunarDate.month);
     getIdiom();
   }
 
@@ -83,8 +89,7 @@ class LichAmComponent implements OnInit {
 
   void initDateFormat() {
     weekFormat = DateFormat("EEEE", "vi");
-    monthYearFormat = DateFormat("MMMM, y", "vi");
-    dayMonthYearFormat = DateFormat("d MMMM, y", "vi");
+    monthYearFormat = DateFormat("MMMM y", "vi");
     ddMMyyyyFormat = DateFormat('dd/MM/yyyy', "vi");
   }
 
@@ -212,9 +217,51 @@ class LichAmComponent implements OnInit {
     return [lunarDay, lunarMonth, lunarYear, lunarLeap];
   }
 
-  Date calculate() {
-    var date = singleDateModel.selection('range').start;
+  Date calculate(Date date) {
     List<int> result = convertSolar2Lunar(date.day, date.month, date.year, 7);
     return Date(result[2], result[1], result[0]);
+  }
+
+  String getLunarMonth(int month) {
+    String result;
+    switch (month) {
+    case 1:
+      result = "Tháng Giêng";
+      break;
+    case 2: 
+      result = "Tháng Hai";
+      break;
+    case 3: 
+      result = "Tháng Ba";
+      break;
+    case 4: 
+      result = "Tháng Tư";
+      break;
+    case 5: 
+      result = "Tháng Năm";
+      break;
+    case 6: 
+      result = "Tháng Sáu";
+      break;
+    case 7: 
+      result = "Tháng Bẩy";
+      break;
+    case 8: 
+      result = "Tháng Tám";
+      break;
+    case 9: 
+      result = "Tháng Chín";
+      break;
+    case 10: 
+      result = "Tháng Mười";
+      break;
+    case 11: 
+      result = "Tháng Một";
+      break;
+    case 12: 
+      result = "Tháng Chạp";
+      break;
+    }
+    return result;
   }
 }

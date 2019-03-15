@@ -1,26 +1,72 @@
 <!-- Components info: https://webdev.dartlang.org/components -->
 <div style="text-align-last: center">
   <div class="inline-block">
-    <div style="width: 512px; background: indigo; text-align: center; padding-top: 2px; padding-bottom: 2px">
-      <p *ngIf="monthYearFormat != null" style="font-size: 24px; color: white">{{singleDateModel.selection('range').start.format(monthYearFormat).toUpperCase()}}</p>
+    <div style="width: 512px; 
+      background: indigo; 
+      text-align: center; 
+      padding-top: 2px; 
+      padding-bottom: 2px">
+      <p *ngIf="monthYearFormat != null" 
+        style="font-size: 24px; 
+          color: white">
+        {{singleDateModel.selection('range').start.format(monthYearFormat).toUpperCase()}}</p>
     </div>
     
     <div style="width: 512px; text-align: center">
-      <p style="font-size: 192px; margin-top: 16px; margin-bottom: 16px"><b>{{singleDateModel.selection('range').start.day}}</b></p>
+      <p style="font-size: 192px; 
+        margin-top: 16px; 
+        margin-bottom: 16px">
+        <b>{{singleDateModel.selection('range').start.day}}</b></p>
     </div>
     
     <div style="width: 512px; text-align: center">
-      <p *ngIf="weekFormat != null" style="font-size: 24px; margin-top: 16px; margin-bottom: 16px">{{singleDateModel.selection('range').start.format(weekFormat)}}</p>
+      <p *ngIf="weekFormat != null" 
+        style="font-size: 24px; 
+          margin-top: 16px; 
+          margin-bottom: 16px">
+        {{singleDateModel.selection('range').start.format(weekFormat)}}</p>
     </div>
     
-    <div style="width: 512px; height: 96px; text-align: center; display: -webkit-flex; display: flex; -webkit-flex-direction: column; -ms-flex-direction: column; flex-direction: column; -webkit-justify-content: center; -ms-flex-pack: center; justify-content: center;">
+    <div style="width: 512px; 
+      height: 96px; 
+      text-align: center; 
+      display: -webkit-flex; 
+      display: flex; 
+      -webkit-flex-direction: column; 
+      -ms-flex-direction: column; 
+      flex-direction: column; 
+      -webkit-justify-content: center; 
+      -ms-flex-pack: center; 
+      justify-content: center;">
       <p *ngIf="idiom != null">{{idiom}}<br/>{{author}}</p>
     </div>
     
     <div style="width: 512px; height: 8px; background: gray"></div>
     
-    <div style="width: 512px; text-align: center">
-      <p *ngIf="dayMonthYearFormat != null" style="font-size: 30px">{{calculate().format(dayMonthYearFormat)}}</p>
+    <div style="display: -webkit-flex;
+	    display: flex;
+	    -webkit-flex-direction: row;
+	    -ms-flex-direction: row;
+	    flex-direction: row;">
+      <div style="-webkit-flex: 1 1;
+        -moz-flex: 1 1;
+        -ms-flex: 1 1;
+        -o-flex: 1 1;
+        flex: 1 1;">
+      </div>
+
+      <div>
+        <p style="font-size: 32px; margin-top: 8px; margin-bottom: 8px">{{lunarMonth}}</p>
+        <p style="font-size: 64px; margin-top: 8px; margin-bottom: 8px"><b>{{lunarDate.day}}</b></p>
+        <p style="font-size: 32px; margin-top: 8px; margin-bottom: 8px">Năm {{lunarDate.year}}</p>
+      </div>
+
+      <div style="-webkit-flex: 1 1;
+        -moz-flex: 1 1;
+        -ms-flex: 1 1;
+        -o-flex: 1 1;
+        flex: 1 1;">
+      </div>
     </div>
   </div>
   
