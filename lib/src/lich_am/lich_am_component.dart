@@ -3,7 +3,6 @@ import 'dart:async';
 
 import 'package:angular/angular.dart';
 import 'package:angular_components/angular_components.dart';
-import 'package:angular_components/material_datepicker/material_datepicker.dart';
 import 'package:angular_components/material_datepicker/material_calendar_picker.dart';
 import 'package:angular_components/material_datepicker/module.dart';
 import 'package:angular_components/utils/browser/window/module.dart';
@@ -17,23 +16,22 @@ import 'dart:math' as math;
   styleUrls: ['lich_am_component.css'],
   templateUrl: 'lich_am_component.html',
   directives: [
-    MaterialCheckboxComponent,
+    coreDirectives,
     MaterialFabComponent,
     MaterialButtonComponent,
     MaterialIconComponent,
-    MaterialDatepickerComponent,
     DateInputDirective,
     MaterialCalendarPickerComponent,
     materialInputDirectives,
     NgFor,
     NgIf,
-    coreDirectives
-    
   ],
   providers: [windowBindings, datepickerBindings],
 )
 class LichAmComponent implements OnInit {
 
+  Date minDate = Date.today().add(years: -1000);
+  Date maxDate = Date.today().add(years: 1000);
   DateFormat weekFormat;
   DateFormat monthYearFormat;
   DateFormat dayMonthYearFormat;
