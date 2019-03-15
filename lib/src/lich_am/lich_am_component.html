@@ -10,10 +10,10 @@
     </div>
     
     <div style="width: 512px; text-align: center">
-      <p *ngIf="weekFormat != null" style="font-size: 24px">{{singleDateModel.selection('range').start.format(weekFormat)}}</p>
+      <p *ngIf="weekFormat != null" style="font-size: 24px; margin-top: 16px; margin-bottom: 16px">{{singleDateModel.selection('range').start.format(weekFormat)}}</p>
     </div>
     
-    <div style="width: 512px; height: 96px; text-align: center; padding-top: 16px">
+    <div style="width: 512px; height: 96px; text-align: center; display: -webkit-flex; display: flex; -webkit-flex-direction: column; -ms-flex-direction: column; flex-direction: column; -webkit-justify-content: center; -ms-flex-pack: center; justify-content: center;">
       <p *ngIf="idiom != null">{{idiom}}<br/>{{author}}</p>
     </div>
     
@@ -25,17 +25,31 @@
   </div>
   
   <div class="inline-block">
-    <div *ngIf="ddMMyyyyFormat != null" style="display: inline-flex">
-      <span style="padding: 8px">Ngày/Tháng/Năm</span>
+    <div *ngIf="ddMMyyyyFormat != null" style="width: 512px">
+      <span>Ngày/Tháng/Năm</span>
       <material-input dateParsing
                       [(dateFormat)]="ddMMyyyyFormat"
                       [date]="singleDateModel.selection('range').start"
                       (dateChange)="onDateChange($event)"
                       [required]="true">
       </material-input>
+
+      <material-button icon (trigger)="onBefore()">
+        <material-icon icon="navigate_before"></material-icon>
+      </material-button>
+
+      <material-button icon (trigger)="onNext()">
+        <material-icon icon="navigate_next"></material-icon>
+      </material-button>
+
+      <material-button icon (trigger)="onRefresh()">
+        <material-icon icon="refresh"></material-icon>
+      </material-button>
     </div>
 
-    <material-calendar-picker class="calendar" mode="single-date" [(state)]="singleDateModel">
-    </material-calendar-picker>
+    <div class="inline-block">
+      <material-calendar-picker class="calendar" mode="single-date" [(state)]="singleDateModel">
+      </material-calendar-picker>
+    </div>
   </div>
 </div>

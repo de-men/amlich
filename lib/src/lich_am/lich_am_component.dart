@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:http/http.dart' as http;
 import 'dart:async';
 
@@ -21,6 +19,7 @@ import 'dart:math' as math;
   directives: [
     MaterialCheckboxComponent,
     MaterialFabComponent,
+    MaterialButtonComponent,
     MaterialIconComponent,
     MaterialDatepickerComponent,
     DateInputDirective,
@@ -29,6 +28,7 @@ import 'dart:math' as math;
     NgFor,
     NgIf,
     coreDirectives
+    
   ],
   providers: [windowBindings, datepickerBindings],
 )
@@ -54,9 +54,22 @@ class LichAmComponent implements OnInit {
   }
 
   void onDateChange(Date dateChanged) {
-    singleDateModel = singleDateModel.setSelection(CalendarSelection(
-        'range', dateChanged, dateChanged));
+    singleDateModel = singleDateModel.setSelection(CalendarSelection('range', dateChanged, dateChanged));
     getIdiom();
+  }
+
+  void onBefore() {
+    var beforeDate = singleDateModel.selection('range').start.add(days: -1);
+    singleDateModel = singleDateModel.setSelection(CalendarSelection('range', beforeDate, beforeDate));
+  }
+
+  void onNext() {
+    var afterDate = singleDateModel.selection('range').start.add(days: 1);
+    singleDateModel = singleDateModel.setSelection(CalendarSelection('range', afterDate, afterDate));
+  }
+
+  void onRefresh() {
+    singleDateModel = singleDateModel.setSelection(CalendarSelection('range', Date.today(), Date.today()));
   }
 
   Future<Null> getIdiom() async {
