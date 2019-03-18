@@ -32,9 +32,9 @@ class LichAmComponent implements OnInit {
 
   static final List<String> LUNAR_MONTH = ["Tháng Giêng", "Tháng Hai", "Tháng Ba", "Tháng Tư", "Tháng Năm", "Tháng Sáu", "Tháng Bảy", "Tháng Tám", "Tháng Chín", "Tháng Mười", "Tháng Một", "Tháng Chạp"];
   static final List<String> CAN = ["Canh", "Tân", "Nhâm", "Quý", "Giáp", "Ất", "Bính", "Đinh", "Mậu", "Kỷ"];
-  static final List<String> CHI = ["Thân", "Dậu", "Tuất", "Hợi", "Tý", "Sửu", "Dần", "Mão", "Thìn", "Tỵ", "Ngọ", "Mùi"];
+  static final List<String> CHI = ["Thân", "Dậu", "Tuất", "Hợi", "Tí", "Sửu", "Dần", "Mão", "Thìn", "Tỵ", "Ngọ", "Mùi"];
   static final List<bool> D = [true, true, false, false, true, true, false, true, false, false, true, false];
-  static final List<String> HOUR = ["Tý (23h-1h)", "Sửu (1h-3h)", "Dần (3h-5h)", "Mão (5h-7h)", "Thìn (7h-9h)", "Tỵ (9h-11h)", "Ngọ (11h-13h)", "Mùi (13h-15h)", "Thân (15h-17h)", "Dậu (17h-19h)", "Tuất (19h-21h)", "Hợi (21h-23h)"];
+  static final List<String> HOUR = ["Tí (23h-1h)", "Sửu (1h-3h)", "Dần (3h-5h)", "Mão (5h-7h)", "Thìn (7h-9h)", "Tỵ (9h-11h)", "Ngọ (11h-13h)", "Mùi (13h-15h)", "Thân (15h-17h)", "Dậu (17h-19h)", "Tuất (19h-21h)", "Hợi (21h-23h)"];
   
   Date minDate = Date.today().add(years: -1000);
   Date maxDate = Date.today().add(years: 1000);
@@ -107,7 +107,7 @@ class LichAmComponent implements OnInit {
     int m = mm + 12 * a - 3;
     int jd = dd + (153 * m + 2) ~/ 5 + 365 * y + y ~/ 4 - y ~/ 100 + y ~/ 400 - 32045;
     if (jd < 2299161) {
-        jd = dd + (153 * m + 2) ~/ 5 + 365 * y + y ~/ 4 - 32083;
+      jd = dd + (153 * m + 2) ~/ 5 + 365 * y + y ~/ 4 - 32083;
     }
     //jd = jd - 1721425;
     return jd;
@@ -132,9 +132,9 @@ class LichAmComponent implements OnInit {
     C1 = C1 + 0.0010 * math.sin(dr * (2 * F - Mpr)) + 0.0005 * math.sin(dr * (2 * Mpr + M));
     double deltat;
     if (T < -11) {
-        deltat= 0.001 + 0.000839 * T + 0.0002261 * T2 - 0.00000845 * T3 - 0.000000081 * T * T3;
+      deltat= 0.001 + 0.000839 * T + 0.0002261 * T2 - 0.00000845 * T3 - 0.000000081 * T * T3;
     } else {
-        deltat= -0.000278 + 0.000265 * T + 0.000262 * T2;
+      deltat= -0.000278 + 0.000265 * T + 0.000262 * T2;
     };
     double JdNew = Jd1 + C1 - deltat;
     return JdNew;
@@ -146,16 +146,16 @@ class LichAmComponent implements OnInit {
   }
 
   double SunLongitudeAA98(double jdn) {
-        double T = (jdn - 2451545.0 ) / 36525; // Time in Julian centuries from 2000-01-01 12:00:00 GMT
-        double T2 = T * T;
-        double dr = math.pi / 180; // degree to radian
-        double M = 357.52910 + 35999.05030 * T - 0.0001559 * T2 - 0.00000048 * T * T2; // mean anomaly, degree
-        double L0 = 280.46645 + 36000.76983 * T + 0.0003032 * T2; // mean longitude, degree
-        double DL = (1.914600 - 0.004817 * T - 0.000014 * T2) * math.sin(dr * M);
-        DL = DL + (0.019993 - 0.000101 * T) * math.sin(dr * 2 * M) + 0.000290 * math.sin(dr * 3 * M);
-        double L = L0 + DL; // true longitude, degree
-        L = L - 360 * (L ~/ 360); // Normalize to (0, 360)
-        return L;
+    double T = (jdn - 2451545.0 ) / 36525; // Time in Julian centuries from 2000-01-01 12:00:00 GMT
+    double T2 = T * T;
+    double dr = math.pi / 180; // degree to radian
+    double M = 357.52910 + 35999.05030 * T - 0.0001559 * T2 - 0.00000048 * T * T2; // mean anomaly, degree
+    double L0 = 280.46645 + 36000.76983 * T + 0.0003032 * T2; // mean longitude, degree
+    double DL = (1.914600 - 0.004817 * T - 0.000014 * T2) * math.sin(dr * M);
+    DL = DL + (0.019993 - 0.000101 * T) * math.sin(dr * 2 * M) + 0.000290 * math.sin(dr * 3 * M);
+    double L = L0 + DL; // true longitude, degree
+    L = L - 360 * (L ~/ 360); // Normalize to (0, 360)
+    return L;
   }
 
   double getSunLongitude(int dayNumber, double timeZone) {
@@ -168,7 +168,7 @@ class LichAmComponent implements OnInit {
     int nm = getNewMoonDay(k, timeZone);
     int sunLong = getSunLongitude(nm, timeZone) ~/ 30;
     if (sunLong >= 9) {
-        nm = getNewMoonDay(k - 1, timeZone);
+      nm = getNewMoonDay(k - 1, timeZone);
     }
     return nm;
   }
@@ -179,9 +179,9 @@ class LichAmComponent implements OnInit {
     int i = 1; // We start with the month following lunar month 11
     int arc = getSunLongitude(getNewMoonDay(k + i, timeZone), timeZone) ~/ 30;
     do {
-        last = arc;
-        i++;
-        arc = getSunLongitude(getNewMoonDay(k + i, timeZone), timeZone) ~/ 30;
+      last = arc;
+      i++;
+      arc = getSunLongitude(getNewMoonDay(k + i, timeZone), timeZone) ~/ 30;
     } while (arc != last && i < 14);
     return i - 1;
   }
@@ -206,35 +206,37 @@ class LichAmComponent implements OnInit {
     int k = (dayNumber - 2415021.076998695) ~/ 29.530588853;
     int monthStart = getNewMoonDay(k + 1, timeZone);
     if (monthStart > dayNumber) {
-        monthStart = getNewMoonDay(k, timeZone);
+      monthStart = getNewMoonDay(k, timeZone);
     }
     int a11 = getLunarMonth11(yy, timeZone);
     int b11 = a11;
     if (a11 >= monthStart) {
-        lunarYear = yy;
-        a11 = getLunarMonth11(yy - 1, timeZone);
+      lunarYear = yy;
+      a11 = getLunarMonth11(yy - 1, timeZone);
     } else {
-        lunarYear = yy+1;
-        b11 = getLunarMonth11(yy + 1, timeZone);
+      lunarYear = yy + 1;
+      b11 = getLunarMonth11(yy + 1, timeZone);
     }
     lunarDay = dayNumber - monthStart + 1;
     int diff = (monthStart - a11) ~/ 29;
+    print("diff" + diff.toString());
     lunarLeap = 0;
-    lunarMonth = diff+11;
+    lunarMonth = diff + 11;
     if (b11 - a11 > 365) {
-        int leapMonthDiff = getLeapMonthOffset(a11, timeZone);
-        if (diff >= leapMonthDiff) {
-            lunarMonth = diff + 10;
-            if (diff == leapMonthDiff) {
-                lunarLeap = 1;
-            }
+      int leapMonthDiff = getLeapMonthOffset(a11, timeZone);
+      print("leapMonthDiff" + leapMonthDiff.toString());
+      if (diff >= leapMonthDiff) {
+        lunarMonth = diff + 10;
+        if (diff == leapMonthDiff) {
+          lunarLeap = 1;
         }
+      }
     }
     if (lunarMonth > 12) {
-        lunarMonth = lunarMonth - 12;
+      lunarMonth = lunarMonth - 12;
     }
     if (lunarMonth >= 11 && diff < 4) {
-        lunarYear -= 1;
+      lunarYear -= 1;
     }
     return [lunarDay, lunarMonth, lunarYear, lunarLeap];
   }
