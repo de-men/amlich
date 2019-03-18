@@ -45,7 +45,8 @@
     
     <div style="width: 512px; height: 8px; background: gray"></div>
     
-    <div style="display: -webkit-flex;
+    <div style="width: 512px; 
+      display: -webkit-flex;
 	    display: flex;
 	    -webkit-flex-direction: row;
 	    -ms-flex-direction: row;
@@ -79,7 +80,18 @@
         -moz-flex: 1 1;
         -ms-flex: 1 1;
         -o-flex: 1 1;
-        flex: 1 1;">
+        flex: 1 1;
+        text-align: center; 
+        display: -webkit-flex; 
+        display: flex; 
+        -webkit-flex-direction: column; 
+        -ms-flex-direction: column; 
+        flex-direction: column; 
+        -webkit-justify-content: center; 
+        -ms-flex-pack: center; 
+        justify-content: center;
+        white-space: pre-line;">
+        <p>Giờ Hoàng Đạo:<br/>{{dHour}}</p>
       </div>
     </div>
   </div>

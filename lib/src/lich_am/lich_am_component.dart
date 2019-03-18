@@ -32,8 +32,10 @@ class LichAmComponent implements OnInit {
 
   static final List<String> LUNAR_MONTH = ["Tháng Giêng", "Tháng Hai", "Tháng Ba", "Tháng Tư", "Tháng Năm", "Tháng Sáu", "Tháng Bảy", "Tháng Tám", "Tháng Chín", "Tháng Mười", "Tháng Một", "Tháng Chạp"];
   static final List<String> CAN = ["Canh", "Tân", "Nhâm", "Quý", "Giáp", "Ất", "Bính", "Đinh", "Mậu", "Kỷ"];
-  static final List<String> CHI = ["Thân", "Dậu", "Tuất", "Hợi", "Tí", "Sửu", "Dần", "Mão", "Thìn", "Tỵ", "Ngọ", "Mùi"];
-
+  static final List<String> CHI = ["Thân", "Dậu", "Tuất", "Hợi", "Tý", "Sửu", "Dần", "Mão", "Thìn", "Tỵ", "Ngọ", "Mùi"];
+  static final List<bool> D = [true, true, false, false, true, true, false, true, false, false, true, false];
+  static final List<String> HOUR = ["Tý (23h-1h)", "Sửu (1h-3h)", "Dần (3h-5h)", "Mão (5h-7h)", "Thìn (7h-9h)", "Tỵ (9h-11h)", "Ngọ (11h-13h)", "Mùi (13h-15h)", "Thân (15h-17h)", "Dậu (17h-19h)", "Tuất (19h-21h)", "Hợi (21h-23h)"];
+  
   Date minDate = Date.today().add(years: -1000);
   Date maxDate = Date.today().add(years: 1000);
   DateFormat weekFormat;
@@ -53,6 +55,7 @@ class LichAmComponent implements OnInit {
   String canChiDay;
   String canChiMonth;
   String canChiYear;
+  String dHour;
 
   @override
   Future<Null> ngOnInit() async {
@@ -187,8 +190,19 @@ class LichAmComponent implements OnInit {
     int lunarDay, lunarMonth, lunarYear, lunarLeap;
     int dayNumber = jdFromDate(dd, mm, yy);
 
-    canChiDay = CAN[(dayNumber + 3) % CAN.length] + " " + CHI[(dayNumber + 5) % CHI.length];
-    
+    final chiDayIndex = (dayNumber + 5) % CHI.length;
+    canChiDay = CAN[(dayNumber + 3) % CAN.length] + " " + CHI[chiDayIndex];
+
+    dHour = "";
+    final shilfD = (chiDayIndex % 6) * 2;
+    for (var i = 0; i < 12; i++) {
+      if(D[(i - shilfD) % 12]){
+        dHour += HOUR[i] + '\n';
+      }
+    }
+
+    dHour = dHour.trim();
+
     int k = (dayNumber - 2415021.076998695) ~/ 29.530588853;
     int monthStart = getNewMoonDay(k + 1, timeZone);
     if (monthStart > dayNumber) {
