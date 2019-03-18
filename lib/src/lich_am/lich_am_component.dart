@@ -186,6 +186,9 @@ class LichAmComponent implements OnInit {
   List<int> convertSolar2Lunar(int dd, int mm, int yy, double timeZone) {
     int lunarDay, lunarMonth, lunarYear, lunarLeap;
     int dayNumber = jdFromDate(dd, mm, yy);
+
+    canChiDay = CAN[(dayNumber + 3) % CAN.length] + " " + CHI[(dayNumber + 5) % CHI.length];
+    
     int k = (dayNumber - 2415021.076998695) ~/ 29.530588853;
     int monthStart = getNewMoonDay(k + 1, timeZone);
     if (monthStart > dayNumber) {
@@ -224,17 +227,18 @@ class LichAmComponent implements OnInit {
 
   Date calculate(Date date) {
     List<int> result = convertSolar2Lunar(date.day, date.month, date.year, 7);
+    final day = result[0];
     final month = result[1];
     final year = result[2];
     lunarMonth = LUNAR_MONTH[month - 1];
     if(result[3] != 0) lunarMonth += " Nhuận";
 
-    var canYearIndex = year % CAN.length;
-    var canMonthOfset = canYearIndex % 5 + ((canYearIndex % 5 + 7) % CAN.length) * 2;
+    final canYearIndex = year % CAN.length;
+    final canMonthOfset = canYearIndex % 5 + ((canYearIndex % 5 + 7) % CAN.length) * 2;
 
     canChiMonth = CAN[(canMonthOfset + month - 1) % CAN.length] + " " + CHI[(month + 5) % CHI.length];
     canChiYear = CAN[canYearIndex] + " " + CHI[year % CHI.length];
 
-    return Date(year, month, result[0]);
+    return Date(year, month, day);
   }
 }
