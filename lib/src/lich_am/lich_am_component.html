@@ -28,7 +28,9 @@
     </div>
     
     <div style="width: 512px; 
-      height: 96px; 
+      min-height: 96px; 
+      padding-top: 8px;
+      padding-bottom: 8px;
       text-align: center; 
       display: -webkit-flex; 
       display: flex; 
@@ -52,11 +54,23 @@
         -moz-flex: 1 1;
         -ms-flex: 1 1;
         -o-flex: 1 1;
-        flex: 1 1;">
+        flex: 1 1;
+        text-align: center; 
+        display: -webkit-flex; 
+        display: flex; 
+        -webkit-flex-direction: column; 
+        -ms-flex-direction: column; 
+        flex-direction: column; 
+        -webkit-justify-content: center; 
+        -ms-flex-pack: center; 
+        justify-content: center;">
+        <p>Ngày {{canChiDay}}</p>
+        <p>Tháng {{canChiMonth}}</p>
+        <p>Năm {{canChiYear}}</p>
       </div>
 
       <div>
-        <p style="font-size: 32px; margin-top: 8px; margin-bottom: 8px">{{lunarMonth}}</p>
+        <p style="font-size: 32px; margin-top: 16px; margin-bottom: 8px">{{lunarMonth}}</p>
         <p style="font-size: 64px; margin-top: 8px; margin-bottom: 8px"><b>{{lunarDate.day}}</b></p>
         <p style="font-size: 32px; margin-top: 8px; margin-bottom: 8px">Năm {{lunarDate.year}}</p>
       </div>

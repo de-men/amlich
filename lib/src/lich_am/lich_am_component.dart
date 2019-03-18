@@ -30,6 +30,10 @@ import 'dart:math' as math;
 )
 class LichAmComponent implements OnInit {
 
+  static final List<String> LUNAR_MONTH = ["Tháng Giêng", "Tháng Hai", "Tháng Ba", "Tháng Tư", "Tháng Năm", "Tháng Sáu", "Tháng Bảy", "Tháng Tám", "Tháng Chín", "Tháng Mười", "Tháng Một", "Tháng Chạp"];
+  static final List<String> CAN = ["Canh", "Tân", "Nhâm", "Quý", "Giáp", "Ất", "Bính", "Đinh", "Mậu", "Kỷ"];
+  static final List<String> CHI = ["Thân", "Dậu", "Tuất", "Hợi", "Tí", "Sửu", "Dần", "Mão", "Thìn", "Tỵ", "Ngọ", "Mùi"];
+
   Date minDate = Date.today().add(years: -1000);
   Date maxDate = Date.today().add(years: 1000);
   DateFormat weekFormat;
@@ -46,19 +50,20 @@ class LichAmComponent implements OnInit {
       CalendarState.selected([CalendarSelection('range', Date.today(), Date.today())]);
   Date lunarDate;
   String lunarMonth;
+  String canChiDay;
+  String canChiMonth;
+  String canChiYear;
 
   @override
   Future<Null> ngOnInit() async {
     Intl.defaultLocale = "vi_VN";
     initializeDateFormatting("vi", null).then((_) => initDateFormat());
     lunarDate = calculate(Date.today());
-    lunarMonth =getLunarMonth(lunarDate.month);
   }
 
   void onDateChange(Date dateChanged) {
     singleDateModel = singleDateModel.setSelection(CalendarSelection('range', dateChanged, dateChanged));
     lunarDate =calculate(dateChanged);
-    lunarMonth =getLunarMonth(lunarDate.month);
     getIdiom();
   }
 
@@ -219,49 +224,17 @@ class LichAmComponent implements OnInit {
 
   Date calculate(Date date) {
     List<int> result = convertSolar2Lunar(date.day, date.month, date.year, 7);
-    return Date(result[2], result[1], result[0]);
-  }
+    final month = result[1];
+    final year = result[2];
+    lunarMonth = LUNAR_MONTH[month - 1];
+    if(result[3] != 0) lunarMonth += " Nhuận";
 
-  String getLunarMonth(int month) {
-    String result;
-    switch (month) {
-    case 1:
-      result = "Tháng Giêng";
-      break;
-    case 2: 
-      result = "Tháng Hai";
-      break;
-    case 3: 
-      result = "Tháng Ba";
-      break;
-    case 4: 
-      result = "Tháng Tư";
-      break;
-    case 5: 
-      result = "Tháng Năm";
-      break;
-    case 6: 
-      result = "Tháng Sáu";
-      break;
-    case 7: 
-      result = "Tháng Bẩy";
-      break;
-    case 8: 
-      result = "Tháng Tám";
-      break;
-    case 9: 
-      result = "Tháng Chín";
-      break;
-    case 10: 
-      result = "Tháng Mười";
-      break;
-    case 11: 
-      result = "Tháng Một";
-      break;
-    case 12: 
-      result = "Tháng Chạp";
-      break;
-    }
-    return result;
+    var canYearIndex = year % CAN.length;
+    var canMonthOfset = canYearIndex % 5 + ((canYearIndex % 5 + 7) % CAN.length) * 2;
+
+    canChiMonth = CAN[(canMonthOfset + month - 1) % CAN.length] + " " + CHI[(month + 5) % CHI.length];
+    canChiYear = CAN[canYearIndex] + " " + CHI[year % CHI.length];
+
+    return Date(year, month, result[0]);
   }
 }
