@@ -50,7 +50,8 @@ class LichAmComponent implements OnInit {
 
   CalendarState singleDateModel =
       CalendarState.selected([CalendarSelection('range', Date.today(), Date.today())]);
-  Date lunarDate;
+  int lunarDay;
+  int lunarYear;
   String lunarMonth;
   String canChiDay;
   String canChiMonth;
@@ -61,12 +62,16 @@ class LichAmComponent implements OnInit {
   Future<Null> ngOnInit() async {
     Intl.defaultLocale = "vi_VN";
     initializeDateFormatting("vi", null).then((_) => initDateFormat());
-    lunarDate = calculate(Date.today());
+    List<int> lunarResult = calculate(Date.today());
+    lunarDay = lunarResult[0];
+    lunarYear = lunarResult[2];
   }
 
   void onDateChange(Date dateChanged) {
     singleDateModel = singleDateModel.setSelection(CalendarSelection('range', dateChanged, dateChanged));
-    lunarDate =calculate(dateChanged);
+    List<int> lunarResult = calculate(dateChanged);
+    lunarDay = lunarResult[0];
+    lunarYear = lunarResult[2];
     getIdiom();
   }
 
@@ -219,12 +224,10 @@ class LichAmComponent implements OnInit {
     }
     lunarDay = dayNumber - monthStart + 1;
     int diff = (monthStart - a11) ~/ 29;
-    print("diff" + diff.toString());
     lunarLeap = 0;
     lunarMonth = diff + 11;
     if (b11 - a11 > 365) {
       int leapMonthDiff = getLeapMonthOffset(a11, timeZone);
-      print("leapMonthDiff" + leapMonthDiff.toString());
       if (diff >= leapMonthDiff) {
         lunarMonth = diff + 10;
         if (diff == leapMonthDiff) {
@@ -241,9 +244,8 @@ class LichAmComponent implements OnInit {
     return [lunarDay, lunarMonth, lunarYear, lunarLeap];
   }
 
-  Date calculate(Date date) {
+  List<int> calculate(Date date) {
     List<int> result = convertSolar2Lunar(date.day, date.month, date.year, 7);
-    final day = result[0];
     final month = result[1];
     final year = result[2];
     lunarMonth = LUNAR_MONTH[month - 1];
@@ -255,6 +257,6 @@ class LichAmComponent implements OnInit {
     canChiMonth = CAN[(canMonthOfset + month - 1) % CAN.length] + " " + CHI[(month + 5) % CHI.length];
     canChiYear = CAN[canYearIndex] + " " + CHI[year % CHI.length];
 
-    return Date(year, month, day);
+    return result;
   }
 }
