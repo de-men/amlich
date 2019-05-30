@@ -1,3 +1,5 @@
+import 'dart:html';
+
 import 'package:http/http.dart' as http;
 import 'dart:async';
 
@@ -43,9 +45,6 @@ class LichAmComponent implements OnInit {
   DateFormat monthYearFormat;
   DateFormat ddMMyyyyFormat;
 
-  String idiom;
-  String author;
-
   String formatDate(Date date) => date == null ? '(null)' : date.toString();
 
   CalendarState singleDateModel =
@@ -72,7 +71,6 @@ class LichAmComponent implements OnInit {
     List<int> lunarResult = calculate(dateChanged);
     lunarDay = lunarResult[0];
     lunarYear = lunarResult[2];
-    getIdiom();
   }
 
   void onBefore() {
@@ -87,17 +85,6 @@ class LichAmComponent implements OnInit {
 
   void onRefresh() {
     singleDateModel = singleDateModel.setSelection(CalendarSelection('range', Date.today(), Date.today()));
-  }
-
-  Future<Null> getIdiom() async {
-    var client = new http.Client();
-    try {
-      var splitString = (await client.read("https://us-central1-licham.cloudfunctions.net/idiom")).split('\n');
-      idiom = splitString[0];
-      author = splitString[splitString.length - 1];
-    } finally {
-      client.close();
-    }
   }
 
   void initDateFormat() {
