@@ -1,7 +1,5 @@
-import 'dart:html';
 
-import 'package:http/http.dart' as http;
-import 'dart:async';
+import 'package:angular_router/angular_router.dart';
 
 import 'package:angular/angular.dart';
 import 'package:angular_components/angular_components.dart';
@@ -12,6 +10,8 @@ import 'package:angular_components/model/date/date.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'dart:math' as math;
+
+import 'package:licham/src/route_paths.dart';
 
 @Component(
   selector: 'lich-am',
@@ -30,7 +30,11 @@ import 'dart:math' as math;
   ],
   providers: [windowBindings, datepickerBindings],
 )
-class LichAmComponent implements OnInit {
+class LichAmComponent implements OnActivate {
+
+  final Router _router;
+
+  LichAmComponent(this._router);
 
   static final List<String> LUNAR_MONTH = ["Tháng Giêng", "Tháng Hai", "Tháng Ba", "Tháng Tư", "Tháng Năm", "Tháng Sáu", "Tháng Bảy", "Tháng Tám", "Tháng Chín", "Tháng Mười", "Tháng Một", "Tháng Chạp"];
   static final List<String> CAN = ["Canh", "Tân", "Nhâm", "Quý", "Giáp", "Ất", "Bính", "Đinh", "Mậu", "Kỷ"];
@@ -47,8 +51,10 @@ class LichAmComponent implements OnInit {
 
   String formatDate(Date date) => date == null ? '(null)' : date.toString();
 
+  static Date active = Date.today();
+
   CalendarState singleDateModel =
-      CalendarState.selected([CalendarSelection('range', Date.today(), Date.today())]);
+      CalendarState.selected([CalendarSelection('range', active, active)]);
   int lunarDay;
   int lunarYear;
   String lunarMonth;
@@ -58,19 +64,28 @@ class LichAmComponent implements OnInit {
   String dHour;
 
   @override
-  Future<Null> ngOnInit() async {
+  void onActivate(_, RouterState current) async {
     Intl.defaultLocale = "vi_VN";
     initializeDateFormatting("vi", null).then((_) => initDateFormat());
-    List<int> lunarResult = calculate(Date.today());
+
+    active = _getDate(current);
+    List<int> lunarResult = calculate(active);
     lunarDay = lunarResult[0];
     lunarYear = lunarResult[2];
   }
 
+  Date _getDate(RouterState routerState) {
+    final date = getDate(routerState.queryParameters);
+    return date == null ? Date.today() : date;
+  }
+
   void onDateChange(Date dateChanged) {
-    singleDateModel = singleDateModel.setSelection(CalendarSelection('range', dateChanged, dateChanged));
-    List<int> lunarResult = calculate(dateChanged);
-    lunarDay = lunarResult[0];
-    lunarYear = lunarResult[2];
+    if(dateChanged.day == active.day && dateChanged.month == active.month && dateChanged.year == active.year) {
+      return; 
+    } else {
+      active = dateChanged;
+    }
+    _router.navigate(RoutePaths.lich_am.toUrl(), NavigationParams(queryParameters: {dateParam: '${dateChanged.format(DateFormat('dd-MM-yyyy'))}'}));
   }
 
   void onBefore() {
@@ -84,7 +99,7 @@ class LichAmComponent implements OnInit {
   }
 
   void onRefresh() {
-    singleDateModel = singleDateModel.setSelection(CalendarSelection('range', Date.today(), Date.today()));
+    singleDateModel = singleDateModel.setSelection(CalendarSelection('range', active, active));
   }
 
   void initDateFormat() {
