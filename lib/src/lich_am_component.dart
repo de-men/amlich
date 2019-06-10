@@ -149,7 +149,7 @@ class LichAmComponent implements OnActivate {
 
   int getNewMoonDay(int k, double timeZone) {
     double jd = NewMoonAA98(k);
-    return (jd + 0.5 + timeZone / 24).toInt();
+    return (jd + 0.5 + timeZone / 24).floor();
   }
 
   double SunLongitudeAA98(double jdn) {
@@ -161,7 +161,7 @@ class LichAmComponent implements OnActivate {
     double DL = (1.914600 - 0.004817 * T - 0.000014 * T2) * math.sin(dr * M);
     DL = DL + (0.019993 - 0.000101 * T) * math.sin(dr * 2 * M) + 0.000290 * math.sin(dr * 3 * M);
     double L = L0 + DL; // true longitude, degree
-    L = L - 360 * (L ~/ 360); // Normalize to (0, 360)
+    L = L - 360 * (L / 360).floor(); // Normalize to (0, 360)
     return L;
   }
 
@@ -171,9 +171,9 @@ class LichAmComponent implements OnActivate {
 
   int getLunarMonth11(int yy, double timeZone) {
     double off = jdFromDate(31, 12, yy) - 2415021.076998695;
-    int k = off ~/ 29.530588853;
+    int k = (off / 29.530588853).floor();
     int nm = getNewMoonDay(k, timeZone);
-    int sunLong = getSunLongitude(nm, timeZone) ~/ 30;
+    int sunLong = (getSunLongitude(nm, timeZone) / 30).floor();
     if (sunLong >= 9) {
       nm = getNewMoonDay(k - 1, timeZone);
     }
@@ -181,14 +181,14 @@ class LichAmComponent implements OnActivate {
   }
 
   int getLeapMonthOffset(int a11, double timeZone) {
-    int k = (0.5 + (a11 - 2415021.076998695) / 29.530588853).toInt();
+    int k = (0.5 + (a11 - 2415021.076998695) / 29.530588853).floor();
     int last; // Month 11 contains point of sun longutide 3*PI/2 (December solstice)
     int i = 1; // We start with the month following lunar month 11
-    int arc = getSunLongitude(getNewMoonDay(k + i, timeZone), timeZone) ~/ 30;
+    int arc = (getSunLongitude(getNewMoonDay(k + i, timeZone), timeZone) / 30).floor();
     do {
       last = arc;
       i++;
-      arc = getSunLongitude(getNewMoonDay(k + i, timeZone), timeZone) ~/ 30;
+      arc = (getSunLongitude(getNewMoonDay(k + i, timeZone), timeZone) / 30).floor();
     } while (arc != last && i < 14);
     return i - 1;
   }
@@ -210,7 +210,7 @@ class LichAmComponent implements OnActivate {
 
     dHour = dHour.trim();
 
-    int k = (dayNumber - 2415021.076998695) ~/ 29.530588853;
+    int k = ((dayNumber - 2415021.076998695) / 29.530588853).floor();
     int monthStart = getNewMoonDay(k + 1, timeZone);
     if (monthStart > dayNumber) {
       monthStart = getNewMoonDay(k, timeZone);
@@ -224,8 +224,10 @@ class LichAmComponent implements OnActivate {
       lunarYear = yy + 1;
       b11 = getLunarMonth11(yy + 1, timeZone);
     }
+
+    
     lunarDay = dayNumber - monthStart + 1;
-    int diff = (monthStart - a11) ~/ 29;
+    int diff = ((monthStart - a11) / 29).floor();
     lunarLeap = 0;
     lunarMonth = diff + 11;
     if (b11 - a11 > 365) {
