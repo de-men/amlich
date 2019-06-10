@@ -1,111 +1,129 @@
 <!-- Components info: https://webdev.dartlang.org/components -->
 <div style="text-align-last: center">
-  <div class="inline-block">
-    <div style="width: 512px; 
-      background: indigo; 
-      text-align: center; 
-      padding-top: 2px; 
-      padding-bottom: 2px">
-      <p *ngIf="monthYearFormat != null" 
-        style="font-size: 24px; 
-          color: white">
-        {{singleDateModel.selection('range').start.format(monthYearFormat).toUpperCase()}}</p>
-    </div>
-    
-    <div style="width: 512px; text-align: center">
-      <p style="font-size: 192px; 
-        margin-top: 16px; 
-        margin-bottom: 16px">
-        <b>{{singleDateModel.selection('range').start.day}}</b></p>
-    </div>
-    
-    <div style="width: 512px; text-align: center">
-      <p *ngIf="weekFormat != null" 
-        style="font-size: 24px; 
-          margin-top: 16px; 
-          margin-bottom: 16px">
-        {{singleDateModel.selection('range').start.format(weekFormat)}}</p>
-    </div>
-    
-    <div style="width: 512px; height: 8px; background: gray"></div>
-    
-    <div style="width: 512px; 
-      display: -webkit-flex;
-	    display: flex;
-	    -webkit-flex-direction: row;
-	    -ms-flex-direction: row;
-	    flex-direction: row;">
-      <div style="-webkit-flex: 1 1;
-        -moz-flex: 1 1;
-        -ms-flex: 1 1;
-        -o-flex: 1 1;
-        flex: 1 1;
-        text-align: center; 
-        display: -webkit-flex; 
-        display: flex; 
-        -webkit-flex-direction: column; 
-        -ms-flex-direction: column; 
-        flex-direction: column; 
-        -webkit-justify-content: center; 
-        -ms-flex-pack: center; 
-        justify-content: center;">
-        <p>Ngày {{canChiDay}}</p>
-        <p>Tháng {{canChiMonth}}</p>
-        <p>Năm {{canChiYear}}</p>
-      </div>
+    <div class="inline-block">
+        <div style="width: 512px;
+            background: indigo;
+            text-align: center;
+            padding-top: 2px;
+            padding-bottom: 2px">
+            <p *ngIf="monthYearFormat != null"
+               style="font-size: 24px; color: white">
+                {{singleDateModel.selection('range').start.format(monthYearFormat).toUpperCase()}}</p>
+        </div>
 
-      <div>
-        <p style="font-size: 32px; margin-top: 16px; margin-bottom: 8px">{{lunarMonth}}</p>
-        <p style="font-size: 64px; margin-top: 8px; margin-bottom: 8px"><b>{{lunarDay}}</b></p>
-        <p style="font-size: 32px; margin-top: 8px; margin-bottom: 8px">Năm {{lunarYear}}</p>
-      </div>
+        <div style="width: 512px; text-align: center">
+            <p style="font-size: 192px; margin-top: 16px; margin-bottom: 16px">
+                <b>{{singleDateModel.selection('range').start.day}}</b></p>
+        </div>
 
-      <div style="-webkit-flex: 1 1;
-        -moz-flex: 1 1;
-        -ms-flex: 1 1;
-        -o-flex: 1 1;
-        flex: 1 1;
-        text-align: center; 
-        display: -webkit-flex; 
-        display: flex; 
-        -webkit-flex-direction: column; 
-        -ms-flex-direction: column; 
-        flex-direction: column; 
-        -webkit-justify-content: center; 
-        -ms-flex-pack: center; 
-        justify-content: center;
-        white-space: pre-line;">
-        <p>Giờ Hoàng Đạo:<br/>{{dHour}}</p>
-      </div>
-    </div>
-  </div>
-  
-  <div class="inline-block">
-    <div *ngIf="ddMMyyyyFormat != null" style="width: 512px">
-      <span>Ngày/Tháng/Năm</span>
-      <material-input dateParsing
-                      [(dateFormat)]="ddMMyyyyFormat"
-                      [date]="singleDateModel.selection('range').start"
-                      (dateChange)="onDateChange($event)"
-                      [required]="true">
-      </material-input>
+        <div style="width: 512px; text-align: center">
+            <p *ngIf="weekFormat != null"
+               style="font-size: 24px; margin-top: 16px; margin-bottom: 16px">
+                {{singleDateModel.selection('range').start.format(weekFormat)}}</p>
+        </div>
 
-      <material-button icon (trigger)="onBefore()">
-        <material-icon icon="navigate_before"></material-icon>
-      </material-button>
+        <div style="width: 512px;
+            height: 32px;
+            padding-top: 8px;
+            padding-bottom: 8px;
+            text-align: center;
+            display: -webkit-flex;
+            display: flex;
+            -webkit-flex-direction: column;
+            -ms-flex-direction: column;
+            flex-direction: column;
+            -webkit-justify-content: center;
+            -ms-flex-pack: center;
+            justify-content: center;">
+        </div>
 
-      <material-button icon (trigger)="onNext()">
-        <material-icon icon="navigate_next"></material-icon>
-      </material-button>
+        <div style="width: 512px; height: 8px; background: gray"></div>
 
-      <material-button icon (trigger)="onRefresh()">
-        <material-icon icon="refresh"></material-icon>
-      </material-button>
+        <div style="width: 512px;
+            display: -webkit-flex;
+            display: flex;
+            -webkit-flex-direction: row;
+            -ms-flex-direction: row;
+            flex-direction: row;">
+            <div style="-webkit-flex: 1 1;
+                -moz-flex: 1 1;
+                -ms-flex: 1 1;
+                -o-flex: 1 1;
+                flex: 1 1;
+                text-align: center;
+                display: -webkit-flex;
+                display: flex;
+                -webkit-flex-direction: column;
+                -ms-flex-direction: column;
+                flex-direction: column;
+                -webkit-justify-content: center;
+                -ms-flex-pack: center;
+                justify-content: center;">
+                <p>Ngày {{canChiDay}}</p>
+                <p>Tháng {{canChiMonth}}</p>
+                <p>Năm {{canChiYear}}</p>
+            </div>
+
+            <div>
+                <p style="font-size: 32px; margin-top: 16px; margin-bottom: 8px">{{lunarMonth}}</p>
+                <p style="font-size: 64px; margin-top: 8px; margin-bottom: 8px"><b>{{lunarDay}}</b></p>
+                <p style="font-size: 32px; margin-top: 8px; margin-bottom: 8px">Năm {{lunarYear}}</p>
+            </div>
+
+            <div style="-webkit-flex: 1 1;
+                -moz-flex: 1 1;
+                -ms-flex: 1 1;
+                -o-flex: 1 1;
+                flex: 1 1;
+                text-align: center;
+                display: -webkit-flex;
+                display: flex;
+                -webkit-flex-direction: column;
+                -ms-flex-direction: column;
+                flex-direction: column;
+                -webkit-justify-content: center;
+                -ms-flex-pack: center;
+                justify-content: center;
+                white-space: pre-line;">
+                <p>Giờ Hoàng Đạo:<br/>{{dHour}}</p>
+            </div>
+        </div>
     </div>
 
     <div class="inline-block">
-      <material-calendar-picker class="calendar" mode="single-date" [(state)]="singleDateModel" [minDate]="minDate" [maxDate]="maxDate">
-      </material-calendar-picker>
+
+        <div *ngIf="ddMMyyyyFormat != null" style="width: 512px">
+            <span>Ngày/Tháng/Năm</span>
+            <material-input dateParsing
+                            [(dateFormat)]="ddMMyyyyFormat"
+                            [date]="singleDateModel.selection('range').start"
+                            (dateChange)="onDateChange($event)"
+                            [required]="true">
+            </material-input>
+
+            <material-button icon (trigger)="onBefore()">
+                <material-icon icon="navigate_before"></material-icon>
+            </material-button>
+
+            <material-button icon (trigger)="onNext()">
+                <material-icon icon="navigate_next"></material-icon>
+            </material-button>
+
+            <material-button icon (trigger)="onRefresh()">
+                <material-icon icon="refresh"></material-icon>
+            </material-button>
+        </div>
+
+        <div class="inline-block">
+            <material-calendar-picker class="calendar" mode="single-date" [(state)]="singleDateModel"
+                                      [minDate]="minDate" [maxDate]="maxDate">
+            </material-calendar-picker>
+        </div>
+
+        <button class="button" 
+            style="width: 32px; height: 32px"
+                onclick="window.open('https\:\/\/calendar.google.com\/calendar\/r?cid=demen.org_u5djvko6e0k5sqbtdl1oqnac60@group.calendar.google.com')">
+            <i class="fa fa-calendar-plus-o"></i>
+        </button>
     </div>
-  </div>
 </div>

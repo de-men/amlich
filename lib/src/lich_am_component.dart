@@ -53,8 +53,7 @@ class LichAmComponent implements OnActivate {
 
   static Date active = Date.today();
 
-  CalendarState singleDateModel =
-      CalendarState.selected([CalendarSelection('range', active, active)]);
+  CalendarState singleDateModel = CalendarState.selected([CalendarSelection('range', active, active)]);
   int lunarDay;
   int lunarYear;
   String lunarMonth;
@@ -72,6 +71,7 @@ class LichAmComponent implements OnActivate {
     List<int> lunarResult = calculate(active);
     lunarDay = lunarResult[0];
     lunarYear = lunarResult[2];
+    singleDateModel = singleDateModel.setSelection(CalendarSelection('range', active, active));
   }
 
   Date _getDate(RouterState routerState) {
@@ -82,9 +82,9 @@ class LichAmComponent implements OnActivate {
   void onDateChange(Date dateChanged) {
     if(dateChanged.day == active.day && dateChanged.month == active.month && dateChanged.year == active.year) {
       return; 
-    } else {
-      active = dateChanged;
     }
+
+    active = dateChanged;
     _router.navigate(RoutePaths.lich_am.toUrl(), NavigationParams(queryParameters: {dateParam: '${dateChanged.format(DateFormat('dd-MM-yyyy'))}'}));
   }
 

@@ -8,10 +8,11 @@ environment:
   sdk: '>=2.1.0 <3.0.0'
 
 dependencies:
-  angular: ^5.2.0
-  angular_components: ^0.11.0
+  angular: ^5.3.1
+  angular_components: ^0.13.0+1
   angular_router: ^2.0.0-alpha+22
   http: ^0.12.0
+  font_awesome: ^4.7.0+1
 
 dev_dependencies:
   angular_test: ^2.2.0
