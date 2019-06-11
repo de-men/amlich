@@ -10,7 +10,6 @@ environment:
 dependencies:
   angular: ^5.3.1
   angular_components: ^0.13.0+1
-  angular_router: ^2.0.0-alpha+22
   http: ^0.12.0
   font_awesome: ^4.7.0+1
 
