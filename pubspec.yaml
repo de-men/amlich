@@ -1,7 +1,7 @@
 name: licham
 description: A web app that uses AngularDart Components
 # version: 1.0.0
-# homepage: http://www.lich.am
+# homepage: http://amlich.demen.org
 # author: Thai Huynh <thaihuynhxyz@gmail.com>
 
 environment:
@@ -15,7 +15,7 @@ dependencies:
 
 dev_dependencies:
   angular_test: ^2.2.0
-  build_runner: ^1.1.2
+  build_runner: ^1.5.2
   build_test: ^0.10.3
-  build_web_compilers: ^1.0.0
+  build_web_compilers: ^2.1.0
   test: ^1.5.1
