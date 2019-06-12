@@ -11503,7 +11503,7 @@ a4.go=a3
 a4.fy.aD(a3)
 s=H.d(T.aH(b1,a0,"button"),"$iq")
 a4.B(s,"button")
-T.Y(s,"onclick","window.open('https\\:\\/\\/calendar.google.com\\/calendar\\/r?cid=demen.org_u5djvko6e0k5sqbtdl1oqnac60@group.calendar.google.com')")
+T.Y(s,"onclick","window.open('https\\:\\/\\/calendar.google.com\\/calendar\\/r?cid=demen.org_4jc7p02lkoire319rabglmfifo@group.calendar.google.com')")
 T.Y(s,a5,"width: 32px; height: 32px")
 a4.m(s)
 s=H.d(T.aH(b1,s,"i"),"$iq")
