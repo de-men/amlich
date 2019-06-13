@@ -81,6 +81,9 @@ class LichAmComponent implements OnInit {
 
     active = dateChanged;
     singleDateModel = singleDateModel.setSelection(CalendarSelection('range', active, active));
+    List<int> lunarResult = calculate(active);
+    lunarDay = lunarResult[0];
+    lunarYear = lunarResult[2];
   }
 
   void onBefore() {
@@ -94,7 +97,7 @@ class LichAmComponent implements OnInit {
   }
 
   void onRefresh() {
-    singleDateModel = singleDateModel.setSelection(CalendarSelection('range', active, active));
+    singleDateModel = singleDateModel.setSelection(CalendarSelection('range', Date.today(), Date.today()));
   }
 
   void initDateFormat() {
