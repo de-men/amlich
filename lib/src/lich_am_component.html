@@ -92,6 +92,17 @@
 
     <div class="inline-block">
 
+        <div style="width: 512px">
+
+            <material-button onclick="window.open('https\:\/\/calendar.google.com\/calendar\/r?cid=demen.org_4jc7p02lkoire319rabglmfifo@group.calendar.google.com')">
+                <i class="fa fa-calendar-plus-o"></i>
+            </material-button>
+            
+            <material-button onclick="window.open('https\:\/\/github.com\/de-men\/amlich')">
+                <i class="fa fa-github"></i>
+            </material-button>
+        </div>
+
         <div *ngIf="ddMMyyyyFormat != null" style="width: 512px">
             <span>Ngày/Tháng/Năm</span>
             <material-input dateParsing
@@ -118,11 +129,5 @@
             <material-calendar-picker class="calendar" mode="single-date" [(state)]="singleDateModel" [minDate]="minDate" [maxDate]="maxDate">
             </material-calendar-picker>
         </div>
-
-        <button class="button" 
-            style="width: 32px; height: 32px"
-                onclick="window.open('https\:\/\/calendar.google.com\/calendar\/r?cid=demen.org_4jc7p02lkoire319rabglmfifo@group.calendar.google.com')">
-            <i class="fa fa-calendar-plus-o"></i>
-        </button>
     </div>
 </div>

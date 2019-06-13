@@ -323,6 +323,14 @@ packages/kernel/text/readme.md
 packages/node_preamble/preamble.js
 packages/node_preamble/preamble.min.js
 packages/package_resolver/src/test_package_config
+packages/pedantic/analysis_options.1.0.0.yaml
+packages/pedantic/analysis_options.1.1.0.yaml
+packages/pedantic/analysis_options.1.2.0.yaml
+packages/pedantic/analysis_options.1.3.0.yaml
+packages/pedantic/analysis_options.1.4.0.yaml
+packages/pedantic/analysis_options.1.5.0.yaml
+packages/pedantic/analysis_options.1.6.0.yaml
+packages/pedantic/analysis_options.1.7.0.yaml
 packages/pedantic/analysis_options.yaml
 packages/test/dart.js
 packages/test/src/runner/browser/static/favicon.ico
