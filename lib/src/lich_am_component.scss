@@ -1,3 +1,6 @@
+@import 'package:angular_components/css/material/material';
+@import 'package:angular_components/material_dialog/mixins';
+
 .calendar {
   height: 400px;
 }
@@ -30,4 +33,13 @@ li material-fab {
 
 .done {
   text-decoration: line-through;
+}
+
+.basic-dialog
+.headered-dialog {
+  width: $mat-grid * 60;
+
+  [footer] material-button:not([disabled]) {
+    color: $mat-blue;
+  }
 }

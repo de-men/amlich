@@ -3,6 +3,10 @@ import 'package:angular_components/angular_components.dart';
 import 'package:angular_components/material_datepicker/material_calendar_picker.dart';
 import 'package:angular_components/material_datepicker/module.dart';
 import 'package:angular_components/utils/browser/window/module.dart';
+import 'package:angular_components/material_dialog/material_dialog.dart';
+import 'package:angular_components/laminate/components/modal/modal.dart';
+import 'package:angular_components/laminate/overlay/module.dart';
+
 import 'package:angular_components/model/date/date.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -10,7 +14,10 @@ import 'dart:math' as math;
 
 @Component(
   selector: 'lich-am',
-  styleUrls: ['lich_am_component.css'],
+  styleUrls: const [
+    'package:angular_components/app_layout/layout.scss.css',
+    'lich_am_component.css'
+  ],
   templateUrl: 'lich_am_component.html',
   directives: [
     coreDirectives,
@@ -19,13 +26,17 @@ import 'dart:math' as math;
     MaterialIconComponent,
     DateInputDirective,
     MaterialCalendarPickerComponent,
+    MaterialDialogComponent,
+    ModalComponent,
     materialInputDirectives,
     NgFor,
     NgIf,
   ],
-  providers: [windowBindings, datepickerBindings],
+  providers: [windowBindings, datepickerBindings, overlayBindings],
 )
 class LichAmComponent implements OnInit {
+
+  bool showDialog = false;
 
   static final List<String> LUNAR_MONTH = ["Tháng Giêng", "Tháng Hai", "Tháng Ba", "Tháng Tư", "Tháng Năm", "Tháng Sáu", "Tháng Bảy", "Tháng Tám", "Tháng Chín", "Tháng Mười", "Tháng Một", "Tháng Chạp"];
   static final List<String> CAN = ["Canh", "Tân", "Nhâm", "Quý", "Giáp", "Ất", "Bính", "Đinh", "Mậu", "Kỷ"];
@@ -89,15 +100,18 @@ class LichAmComponent implements OnInit {
   void onBefore() {
     var beforeDate = singleDateModel.selection('range').start.add(days: -1);
     singleDateModel = singleDateModel.setSelection(CalendarSelection('range', beforeDate, beforeDate));
+    onDateChange(beforeDate);
   }
 
   void onNext() {
     var afterDate = singleDateModel.selection('range').start.add(days: 1);
     singleDateModel = singleDateModel.setSelection(CalendarSelection('range', afterDate, afterDate));
+    onDateChange(afterDate);
   }
 
   void onRefresh() {
     singleDateModel = singleDateModel.setSelection(CalendarSelection('range', Date.today(), Date.today()));
+    onDateChange(Date.today());
   }
 
   void initDateFormat() {

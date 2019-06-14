@@ -12,10 +12,13 @@ dependencies:
   angular_components: ^0.13.0+1
   http: ^0.12.0
   font_awesome: ^4.7.0+1
+  sass_builder: ^2.0.2
+  build_config: ^0.4.0
 
 dev_dependencies:
   angular_test: ^2.2.0
   build_runner: ^1.5.2
   build_test: ^0.10.3
   build_web_compilers: ^2.1.0
-  test: ^1.5.1
+  test: ^1.6.1
+  
