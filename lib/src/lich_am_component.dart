@@ -120,7 +120,9 @@ class LichAmComponent implements OnInit, OnDestroy {
   }
 
   void onExpandedChange(bool isExpanded) {
-    if (!isExpanded && menuSelection.isNotEmpty) {
+    if (isExpanded) {
+      menuSelection.select('value');
+    } else if (menuSelection.isNotEmpty) {
       switch (menuSelection.selectedValues.first) {
         case 'Hôm Nay': 
           onRefresh();

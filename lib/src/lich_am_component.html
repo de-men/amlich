@@ -150,11 +150,7 @@
 <modal [(visible)]="showSolarSearch">
     <material-dialog class="dialog">
     
-        <h1 header>Chọn ngày Dương</h1>
-
-        <material-button icon (trigger)="onRefresh()">
-            <material-icon icon="today"></material-icon>
-        </material-button>
+        <h1 header>Ngày Dương</h1>
 
         <div>
             <div *ngIf="ddMMyyyyFormat != null">
@@ -167,31 +163,21 @@
                                 (dateChange)="onSolarDateSelected($event)"
                                 [required]="true">
                 </material-input>
-    
-                <!-- <material-radio-group>
-                    <material-radio [checked]="isSolarSelected"><i class="fa fa-sun-o"></i></material-radio>
-                    <material-radio><i class="fa fa-moon-o"></i></material-radio>
-                </material-radio-group> -->
             </div>
         </div>
     
         <div footer>
-        <material-button autoFocus clear-size (trigger)="onSolarConfirm()">
-            OK
-        </material-button>
+            <material-button autoFocus clear-size (trigger)="onSolarConfirm()">
+                OK
+            </material-button>
         </div>
-    
     </material-dialog>
 </modal>
 
 <modal [(visible)]="showLunarSearch">
     <material-dialog class="dialog">
     
-        <h1 header>Chọn ngày Âm</h1>
-
-        <material-button icon (trigger)="onRefresh()">
-            <material-icon icon="today"></material-icon>
-        </material-button>
+        <h1 header>Ngày Âm</h1>
 
         <div>
             <div *ngIf="ddMMyyyyFormat != null">
@@ -203,19 +189,13 @@
                                 (change)="onLunarDateSelected($event)"
                                 [required]="true">
                 </material-input>
-    
-                <!-- <material-radio-group>
-                    <material-radio [checked]="isSolarSelected"><i class="fa fa-sun-o"></i></material-radio>
-                    <material-radio><i class="fa fa-moon-o"></i></material-radio>
-                </material-radio-group> -->
             </div>
         </div>
     
         <div footer>
-        <material-button autoFocus clear-size (trigger)="onLunarConfirm()">
-            OK
-        </material-button>
+            <material-button autoFocus clear-size (trigger)="onLunarConfirm()">
+                OK
+            </material-button>
         </div>
-    
     </material-dialog>
 </modal>
