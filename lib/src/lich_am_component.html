@@ -20,9 +20,11 @@
             </material-button>
         </div>
 
-        <material-button icon (trigger)="showDialog = true" [disabled]="showDialog">
-            <material-icon icon="search"></material-icon>
-        </material-button>
+        <material-menu [menu]="menuModel" (isExpandedChange)="onExpandedChange($event)">
+            <section menu-button>
+                <material-icon icon="more_vert" size="medium" baseline></material-icon>
+            </section>
+        </material-menu>
     </div>
 </header>
 
@@ -145,13 +147,16 @@
     </div>
 </material-content>
 
-<modal [(visible)]="showDialog">
+<modal [(visible)]="showSolarSearch">
     <material-dialog class="dialog">
     
-        <h1 header>Chọn ngày</h1>
-    
+        <h1 header>Chọn ngày Dương</h1>
+
+        <material-button icon (trigger)="onRefresh()">
+            <material-icon icon="today"></material-icon>
+        </material-button>
+
         <div>
-    
             <div *ngIf="ddMMyyyyFormat != null">
 
                 <div>Ngày/Tháng/Năm</div>
@@ -159,20 +164,55 @@
                 <material-input dateParsing
                                 [(dateFormat)]="ddMMyyyyFormat"
                                 [date]="singleDateModel.selection('range').start"
-                                (dateChange)="onDateChange($event)"
+                                (dateChange)="onSolarDateSelected($event)"
                                 [required]="true">
                 </material-input>
     
-                <material-button icon (trigger)="onRefresh()">
-                    <material-icon icon="today"></material-icon>
-                </material-button>
+                <!-- <material-radio-group>
+                    <material-radio [checked]="isSolarSelected"><i class="fa fa-sun-o"></i></material-radio>
+                    <material-radio><i class="fa fa-moon-o"></i></material-radio>
+                </material-radio-group> -->
             </div>
-
-
         </div>
     
         <div footer>
-        <material-button autoFocus clear-size (trigger)="showDialog = false">
+        <material-button autoFocus clear-size (trigger)="onSolarConfirm()">
+            OK
+        </material-button>
+        </div>
+    
+    </material-dialog>
+</modal>
+
+<modal [(visible)]="showLunarSearch">
+    <material-dialog class="dialog">
+    
+        <h1 header>Chọn ngày Âm</h1>
+
+        <material-button icon (trigger)="onRefresh()">
+            <material-icon icon="today"></material-icon>
+        </material-button>
+
+        <div>
+            <div *ngIf="ddMMyyyyFormat != null">
+
+                <div>Ngày/Tháng/Năm</div>
+
+                <material-input type="text"
+                                [ngModel]="lunarDate"
+                                (change)="onLunarDateSelected($event)"
+                                [required]="true">
+                </material-input>
+    
+                <!-- <material-radio-group>
+                    <material-radio [checked]="isSolarSelected"><i class="fa fa-sun-o"></i></material-radio>
+                    <material-radio><i class="fa fa-moon-o"></i></material-radio>
+                </material-radio-group> -->
+            </div>
+        </div>
+    
+        <div footer>
+        <material-button autoFocus clear-size (trigger)="onLunarConfirm()">
             OK
         </material-button>
         </div>

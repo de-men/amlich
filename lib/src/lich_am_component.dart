@@ -2,12 +2,16 @@ import 'package:angular/angular.dart';
 import 'package:angular_components/angular_components.dart';
 import 'package:angular_components/material_datepicker/material_calendar_picker.dart';
 import 'package:angular_components/material_datepicker/module.dart';
+import 'package:angular_components/model/menu/menu.dart';
+import 'package:angular_components/model/selection/selection_model.dart';
 import 'package:angular_components/utils/browser/window/module.dart';
 import 'package:angular_components/material_dialog/material_dialog.dart';
 import 'package:angular_components/laminate/components/modal/modal.dart';
 import 'package:angular_components/laminate/overlay/module.dart';
-
+import 'package:angular_components/laminate/overlay/zindexer.dart';
+import 'package:angular_components/laminate/popup/module.dart';
 import 'package:angular_components/model/date/date.dart';
+import 'package:angular_components/utils/disposer/disposer.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'dart:math' as math;
@@ -28,15 +32,46 @@ import 'dart:math' as math;
     MaterialCalendarPickerComponent,
     MaterialDialogComponent,
     ModalComponent,
+    DropdownMenuComponent,
+    MaterialMenuComponent,
     materialInputDirectives,
     NgFor,
     NgIf,
   ],
-  providers: [windowBindings, datepickerBindings, overlayBindings],
+  providers: [windowBindings, datepickerBindings, overlayBindings, popupBindings, ClassProvider(ZIndexer)],
 )
-class LichAmComponent implements OnInit {
+class LichAmComponent implements OnInit, OnDestroy {
 
-  bool showDialog = false;
+  /// Stores the selected color, in an observable manner.
+  final SelectionModel<String> menuSelection;
+  /// Simple menu with some colors.
+  final MenuModel<MenuItem> menuModel;
+  final Disposer _disposer;
+
+  LichAmComponent._(this._disposer, this.menuSelection, this.menuModel);
+
+  factory LichAmComponent() {
+    var menuSelection = SelectionModel<String>.single();
+    final disposer = Disposer.oneShot();
+    var menuModel = MenuModel<MenuItem>([
+      MenuItemGroup<MenuItem>([
+        MenuItem('Hôm Nay', action: () => {
+          menuSelection.select('Hôm Nay')
+        }),
+        MenuItem('Tìm Ngày Dương', action: () => {
+          menuSelection.select('Tìm Ngày Dương')
+        }),
+        MenuItem('Tìm Ngày Âm', action: () => {
+          menuSelection.select('Tìm Ngày Âm')
+        }),
+      ])
+    ]);
+    return LichAmComponent._(disposer, menuSelection, menuModel);
+  }
+
+  bool showSolarSearch = false;
+  bool showLunarSearch = false;
+  Date solarDate;
 
   static final List<String> LUNAR_MONTH = ["Tháng Giêng", "Tháng Hai", "Tháng Ba", "Tháng Tư", "Tháng Năm", "Tháng Sáu", "Tháng Bảy", "Tháng Tám", "Tháng Chín", "Tháng Mười", "Tháng Một", "Tháng Chạp"];
   static final List<String> CAN = ["Canh", "Tân", "Nhâm", "Quý", "Giáp", "Ất", "Bính", "Đinh", "Mậu", "Kỷ"];
@@ -56,24 +91,72 @@ class LichAmComponent implements OnInit {
   static Date active = Date.today();
 
   CalendarState singleDateModel = CalendarState.selected([CalendarSelection('range', active, active)]);
-  int lunarDay;
-  int lunarYear;
+  static int lunarDay;
+  static int lunarYear;
+  static int lunarMonthIndex;
   String lunarMonth;
   String canChiDay;
   String canChiMonth;
   String canChiYear;
   String dHour;
 
+  static String lunarDate = '$lunarDay/${lunarMonthIndex.toString().padLeft(2, '0')}/$lunarYear';
+
   @override
   void ngOnInit() {
     Intl.defaultLocale = "vi_VN";
     initializeDateFormatting("vi", null).then((_) => initDateFormat());
-
     active = _getDate(Uri.base.queryParameters);
     singleDateModel = singleDateModel.setSelection(CalendarSelection('range', active, active));
     List<int> lunarResult = calculate(active);
     lunarDay = lunarResult[0];
     lunarYear = lunarResult[2];
+    lunarDate = '$lunarDay/${lunarMonthIndex.toString().padLeft(2, '0')}/$lunarYear';
+  }
+
+  @override
+  void ngOnDestroy() {
+    _disposer.dispose();
+  }
+
+  void onExpandedChange(bool isExpanded) {
+    if (!isExpanded && menuSelection.isNotEmpty) {
+      switch (menuSelection.selectedValues.first) {
+        case 'Hôm Nay': 
+          onRefresh();
+        break;
+        case 'Tìm Ngày Dương':
+          showSolarSearch = true;
+        break;
+        case 'Tìm Ngày Âm':
+          showLunarSearch = true;
+        break;
+      }
+    }
+  }
+
+  void onSolarDateSelected(Date dateChanged) {
+    solarDate = dateChanged;
+  }
+
+  void onSolarConfirm() {
+    showSolarSearch = false;
+    if (solarDate != null) {
+      onDateChange(solarDate);
+      solarDate = null;
+    }
+  }
+
+  void onLunarDateSelected(String dateChanged) {
+    lunarDate = dateChanged;
+  }
+
+  void onLunarConfirm() {
+    showLunarSearch = false;
+    if(lunarDate != null) {
+      List<String> ddMMyyyy = lunarDate.split('/');
+      onDateChange(convertLunar2Solar(int.parse(ddMMyyyy[0]), int.parse(ddMMyyyy[1]), int.parse(ddMMyyyy[2]), lunarMonth.endsWith('Nhuận') ? 1 : 0, 7));
+    }
   }
 
   Date _getDate(Map<String, String> queryParameters) {
@@ -95,6 +178,7 @@ class LichAmComponent implements OnInit {
     List<int> lunarResult = calculate(active);
     lunarDay = lunarResult[0];
     lunarYear = lunarResult[2];
+    lunarDate = '$lunarDay/${lunarMonthIndex.toString().padLeft(2, '0')}/$lunarYear';
   }
 
   void onBefore() {
@@ -260,17 +344,73 @@ class LichAmComponent implements OnInit {
     return [lunarDay, lunarMonth, lunarYear, lunarLeap];
   }
 
+  /**
+   * http://www.tondering.dk/claus/calendar.html
+   * Section: Is there a formula for calculating the Julian day number?
+   *
+   * @param jd - the number of days since 1 January 4713 BC (Julian calendar)
+   * @return
+   */
+  static Date jdToDate(int jd) {
+    int a, b, c;
+    if (jd > 2299160) { // After 5/10/1582, Gregorian calendar
+        a = jd + 32044;
+        b = (4 * a + 3) ~/ 146097;
+        c = a - (b * 146097) ~/ 4;
+    } else {
+        b = 0;
+        c = jd + 32082;
+    }
+    int d = (4 * c + 3) ~/ 1461;
+    int e = c - (1461 * d) ~/ 4;
+    int m = (5 * e + 2) ~/ 153;
+    int day = e - (153 * m + 2) ~/ 5 + 1;
+    int month = m + 3 - 12 * (m ~/ 10);
+    int year = b * 100 + d - 4800 + m ~/ 10;
+    return Date(year, month, day);
+  }
+
+  Date convertLunar2Solar(int lunarDay, int lunarMonth, int lunarYear, int lunarLeap, double timeZone) {
+    int a11, b11;
+    if (lunarMonth < 11) {
+        a11 = getLunarMonth11(lunarYear - 1, timeZone);
+        b11 = getLunarMonth11(lunarYear, timeZone);
+    } else {
+        a11 = getLunarMonth11(lunarYear, timeZone);
+        b11 = getLunarMonth11(lunarYear + 1, timeZone);
+    }
+    int k = (0.5 + (a11 - 2415021.076998695) / 29.530588853).floor();
+    int off = lunarMonth - 11;
+    if (off < 0) {
+        off += 12;
+    }
+    if (b11 - a11 > 365) {
+        int leapOff = getLeapMonthOffset(a11, timeZone);
+        int leapMonth = leapOff - 2;
+        if (leapMonth < 0) {
+            leapMonth += 12;
+        }
+        if (lunarLeap != 0 && lunarMonth != leapMonth) {
+            return Date(0, 0, 0);
+        } else if (lunarLeap != 0 || off >= leapOff) {
+            off += 1;
+        }
+    }
+    int monthStart = getNewMoonDay(k + off, timeZone);
+    return jdToDate(monthStart + lunarDay - 1);
+  }
+
   List<int> calculate(Date date) {
     List<int> result = convertSolar2Lunar(date.day, date.month, date.year, 7);
-    final month = result[1];
+    lunarMonthIndex = result[1];
     final year = result[2];
-    lunarMonth = LUNAR_MONTH[month - 1];
+    lunarMonth = LUNAR_MONTH[lunarMonthIndex - 1];
     if(result[3] != 0) lunarMonth += " Nhuận";
 
     final canYearIndex = year % CAN.length;
     final canMonthOfset = canYearIndex % 5 + ((canYearIndex % 5 + 7) % CAN.length) * 2;
 
-    canChiMonth = CAN[(canMonthOfset + month - 1) % CAN.length] + " " + CHI[(month + 5) % CHI.length];
+    canChiMonth = CAN[(canMonthOfset + lunarMonthIndex - 1) % CAN.length] + " " + CHI[(lunarMonthIndex + 5) % CHI.length];
     canChiYear = CAN[canYearIndex] + " " + CHI[year % CHI.length];
 
     return result;
