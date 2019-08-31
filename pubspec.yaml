@@ -8,17 +8,23 @@ environment:
   sdk: '>=2.2.0 <3.0.0'
 
 dependencies:
-  angular: ^5.3.1
-  angular_components: ^0.13.0+1
-  http: ^0.12.0
-  font_awesome: ^4.7.0+1
-  sass_builder: ^2.0.2
-  build_config: ^0.4.0
+  flutter_web: any
+  flutter_web_ui: any
 
 dev_dependencies:
-  angular_test: ^2.2.0
   build_runner: ^1.5.2
   build_test: ^0.10.3
   build_web_compilers: ^2.1.0
   test: ^1.6.1
-  
+
+# flutter_web packages are not published to pub.dartlang.org
+# These overrides tell the package tools to get them from GitHub
+dependency_overrides:
+  flutter_web:
+    git:
+      url: https://github.com/flutter/flutter_web
+      path: packages/flutter_web
+  flutter_web_ui:
+    git:
+      url: https://github.com/flutter/flutter_web
+      path: packages/flutter_web_ui

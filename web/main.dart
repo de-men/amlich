@@ -1,6 +1,9 @@
-import 'package:angular/angular.dart';
-import 'package:licham/app_component.template.dart' as ng;
+import 'package:flutter_web_ui/ui.dart' as ui;
 
-void main() {
-  runApp(ng.AppComponentNgFactory);
+// TODO: change `my_app` to refer to your app package name.
+import 'package:licham/main.dart' as app;
+
+Future main() async {
+  await ui.webOnlyInitializePlatform();
+  app.main();
 }
