@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:licham/main_bloc.dart';
+import 'package:licham/main_event.dart';
 import 'package:licham/main_state.dart';
 import 'package:licham/widget/my_flutter_app_icons.dart';
+import 'package:licham/js/window.dart';
 
 class MainView extends StatefulWidget {
   @override
@@ -35,26 +37,36 @@ class _MainState extends State<MainView> {
             floatingActionButtonLocation:
                 FloatingActionButtonLocation.centerDocked,
             floatingActionButton: FloatingActionButton(
-              child: Icon(CustomIcons.calendar_plus_o),
-              onPressed: () => {},
-            ),
+                child: Icon(CustomIcons.calendar_plus_o),
+                onPressed: () {
+                  mainBloc.dispatch(AddCalendar());
+                }),
             bottomNavigationBar: BottomAppBar(
-                shape: CircularNotchedRectangle(),
-                notchMargin: 4.0,
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: <Widget>[
-                      IconButton(
-                        icon: Icon(CustomIcons.down_circled2),
-                        onPressed: () => {},
-                      ),
-                      IconButton(
-                          icon: Icon(CustomIcons.github_circled),
-                          onPressed: () {})
-                    ])),
+              shape: CircularNotchedRectangle(),
+              notchMargin: 4.0,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  IconButton(
+                      icon: Icon(CustomIcons.down_circled2),
+                      onPressed: () {
+                        mainBloc.dispatch(DownloadCalendar());
+                      }),
+                  IconButton(
+                    icon: Icon(CustomIcons.github_circled),
+                    onPressed: _openGithub,
+                  )
+                ],
+              ),
+            ),
           );
         },
       ),
     );
+  }
+
+  _openGithub() async {
+    const url = 'https://github.com/de-men/amlich';
+    open(url);
   }
 }

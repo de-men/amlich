@@ -8,3 +8,13 @@ class AppStarted extends MainEvent {
   @override
   String toString() => 'AppStarted';
 }
+
+class DownloadCalendar extends MainEvent {
+  @override
+  String toString() => 'DownloadCalendar';
+}
+
+class AddCalendar extends MainEvent {
+  @override
+  String toString() => 'AddCalendar';
+}
