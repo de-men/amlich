@@ -3,9 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:licham/main_bloc.dart';
 import 'package:licham/main_event.dart';
-import 'package:licham/main_state.dart';
 import 'package:licham/main_view.dart';
-import 'package:licham/widget/loading_indicator.dart';
 
 class SimpleBlocDelegate extends BlocDelegate {
   @override

@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:licham/js/window.dart';
 import 'package:licham/main_bloc.dart';
-import 'package:licham/main_event.dart';
 import 'package:licham/main_state.dart';
 import 'package:licham/widget/my_flutter_app_icons.dart';
-import 'package:licham/js/window.dart';
 
 class MainView extends StatefulWidget {
   @override
@@ -14,8 +13,6 @@ class MainView extends StatefulWidget {
 class _MainState extends State<MainView> {
   @override
   Widget build(BuildContext context) {
-    final mainBloc = BlocProvider.of<MainBloc>(context);
-
     return BlocListener<MainBloc, MainState>(
       listener: (context, state) {
         if (state is MainFailure) {
@@ -37,10 +34,9 @@ class _MainState extends State<MainView> {
             floatingActionButtonLocation:
                 FloatingActionButtonLocation.centerDocked,
             floatingActionButton: FloatingActionButton(
-                child: Icon(CustomIcons.calendar_plus_o),
-                onPressed: () {
-                  mainBloc.dispatch(AddCalendar());
-                }),
+              child: Icon(CustomIcons.calendar_plus_o),
+              onPressed: _openCalendar,
+            ),
             bottomNavigationBar: BottomAppBar(
               shape: CircularNotchedRectangle(),
               notchMargin: 4.0,
@@ -48,10 +44,9 @@ class _MainState extends State<MainView> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: <Widget>[
                   IconButton(
-                      icon: Icon(CustomIcons.down_circled2),
-                      onPressed: () {
-                        mainBloc.dispatch(DownloadCalendar());
-                      }),
+                    icon: Icon(CustomIcons.down_circled2),
+                    onPressed: _openDownload,
+                  ),
                   IconButton(
                     icon: Icon(CustomIcons.github_circled),
                     onPressed: _openGithub,
@@ -65,7 +60,17 @@ class _MainState extends State<MainView> {
     );
   }
 
-  _openGithub() async {
+  _openCalendar() {
+    open(
+        'https://calendar.google.com/calendar/r?cid=demen.org_4jc7p02lkoire319rabglmfifo@group.calendar.google.com');
+  }
+
+  _openDownload() {
+    open(
+        'https://calendar.google.com/calendar/ical/demen.org_4jc7p02lkoire319rabglmfifo%40group.calendar.google.com/public/basic.ics');
+  }
+
+  _openGithub() {
     const url = 'https://github.com/de-men/amlich';
     open(url);
   }
