@@ -97,11 +97,18 @@ class MainBloc extends Bloc<MainEvent, MainState> {
       initializeDateFormatting("vi", null).then((_) => _initDateFormat());
       solarDate = DateTime.now();
       dispatch(SolarChanged());
-    }
-
-    if (event is SolarChanged) {
+    } else if (event is SolarChanged) {
       lunarDate = _calculate(solarDate);
       yield DateUpdate(solar: solarDate, lunar: lunarDate);
+    } else if (event is TodaySelected) {
+      solarDate = DateTime.now();
+      dispatch(SolarChanged());
+    } else if (event is PreviousSelected) {
+      solarDate = solarDate.add(Duration(days: -1));
+      dispatch(SolarChanged());
+    } else if (event is NextSelected) {
+      solarDate = solarDate.add(Duration(days: 1));
+      dispatch(SolarChanged());
     }
   }
 
@@ -313,6 +320,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
         CHI[(lunarMonthIndex + 5) % CHI.length];
     canChiYear = CAN[canYearIndex] + " " + CHI[year % CHI.length];
 
-    return Lunar(result[0], result[1], result[2], lunarMonth, canChiDay, canChiMonth, canChiYear, hours);
+    return Lunar(result[0], result[1], result[2], lunarMonth, canChiDay,
+        canChiMonth, canChiYear, hours);
   }
 }

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:licham/choice.dart';
 import 'package:licham/js/window.dart';
 import 'package:licham/main_bloc.dart';
+import 'package:licham/main_event.dart';
 import 'package:licham/main_state.dart';
 import 'package:licham/widget/loading_indicator.dart';
 import 'package:licham/widget/my_flutter_app_icons.dart';
@@ -12,6 +14,12 @@ class MainView extends StatefulWidget {
 }
 
 class _MainState extends State<MainView> {
+  static const List<Choice> choices = const <Choice>[
+    const Choice(title: 'Hôm Nay', icon: Icons.calendar_today),
+    const Choice(title: 'Tìm Ngày Dương', icon: CustomIcons.sun),
+    const Choice(title: 'Tìm Ngày Âm', icon: CustomIcons.moon),
+  ];
+
   @override
   Widget build(BuildContext context) {
     final mainBloc = BlocProvider.of<MainBloc>(context);
@@ -36,25 +44,62 @@ class _MainState extends State<MainView> {
                 title: Text(
                     mainBloc.monthYearFormat.format(state.solar).toUpperCase()),
                 centerTitle: true,
+                actions: <Widget>[
+                  // overflow menu
+                  PopupMenuButton<Choice>(
+                    onSelected: (choice) => {
+                      if (choices.indexOf(choice) == 0)
+                        {mainBloc.dispatch(TodaySelected())}
+                    },
+                    itemBuilder: (BuildContext context) {
+                      return choices.map((Choice choice) {
+                        return PopupMenuItem<Choice>(
+                          value: choice,
+                          child: ListTile(
+                            leading: Icon(choice.icon),
+                            title: Text(choice.title),
+                          ),
+                        );
+                      }).toList();
+                    },
+                  ),
+                ],
               ),
               body: LayoutBuilder(
                   builder: (context, constraints) => Column(
                         children: <Widget>[
                           Expanded(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: <Widget>[
-                                Text(
-                                  '${state.solar.day}',
-                                  style: Theme.of(context).textTheme.display4,
-                                ),
-                                Text(
-                                  mainBloc.weekFormat.format(state.solar),
-                                  style: Theme.of(context).textTheme.title,
-                                ),
-                              ],
-                            ),
-                          ),
+                              child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              IconButton(
+                                icon: Icon(Icons.chevron_left),
+                                onPressed: () {
+                                  mainBloc.dispatch(PreviousSelected());
+                                },
+                              ),
+                              Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: <Widget>[
+                                  Text(
+                                    '${state.solar.day}',
+                                    style: Theme.of(context).textTheme.display4,
+                                  ),
+                                  Text(
+                                    mainBloc.weekFormat.format(state.solar),
+                                    style: Theme.of(context).textTheme.title,
+                                  ),
+                                ],
+                              ),
+                              IconButton(
+                                icon: Icon(Icons.chevron_right),
+                                onPressed: () {
+                                  mainBloc.dispatch(NextSelected());
+                                },
+                              ),
+                            ],
+                          )),
                           Divider(thickness: 8),
                           SizedBox(
                             height: (constraints.maxHeight -
@@ -66,7 +111,7 @@ class _MainState extends State<MainView> {
                                 Column(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
-                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                  crossAxisAlignment: CrossAxisAlignment.end,
                                   children: <Widget>[
                                     Text(
                                       'Tháng ${state.lunar.canChiMonth}',

@@ -26,5 +26,7 @@ class CustomIcons {
 
   static const IconData down_circled2 = const IconData(0xe800, fontFamily: _kFontFam);
   static const IconData github_circled = const IconData(0xf09b, fontFamily: _kFontFam);
+  static const IconData sun = const IconData(0xf185, fontFamily: _kFontFam);
+  static const IconData moon = const IconData(0xf186, fontFamily: _kFontFam);
   static const IconData calendar_plus_o = const IconData(0xf271, fontFamily: _kFontFam);
 }
