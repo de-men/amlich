@@ -64,20 +64,21 @@ class _MainState extends State<MainView> {
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: <Widget>[
                                 Column(
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                      crossAxisAlignment: CrossAxisAlignment.end,
                                   children: <Widget>[
                                     Text(
                                       'Tháng ${state.lunar.canChiMonth}',
-                                      style: Theme.of(context).textTheme.title,
+                                      style: Theme.of(context).textTheme.body1,
                                     ),
                                     Text(
                                       'Ngày ${state.lunar.canChiDay}',
-                                      style:
-                                          Theme.of(context).textTheme.title,
+                                      style: Theme.of(context).textTheme.body1,
                                     ),
                                     Text(
                                       'Năm ${state.lunar.canchiYear}',
-                                      style: Theme.of(context).textTheme.title,
+                                      style: Theme.of(context).textTheme.body1,
                                     ),
                                   ],
                                 ),
@@ -100,7 +101,8 @@ class _MainState extends State<MainView> {
                                   ],
                                 ),
                                 Text(
-                                  'Right',
+                                  'Giờ Hoàng Đạo\n${state.lunar.hours}',
+                                  style: Theme.of(context).textTheme.body1,
                                 ),
                               ],
                             ),

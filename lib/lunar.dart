@@ -6,7 +6,8 @@ class Lunar {
   String canChiDay;
   String canChiMonth;
   String canchiYear;
+  String hours;
 
   Lunar(this.day, this.month, this.year, this.monthString, this.canChiDay,
-      this.canChiMonth, this.canchiYear);
+      this.canChiMonth, this.canchiYear, this.hours);
 }
