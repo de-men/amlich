@@ -43,3 +43,12 @@ class SolarSelected extends MainEvent {
   @override
   String toString() => 'SolarSelected { solar: $solar }';
 }
+
+class LunarSelected extends MainEvent {
+  final String lunar;
+
+  LunarSelected({@required this.lunar}) : super([lunar]);
+
+  @override
+  String toString() => 'LunarSelected { lunar: $lunar }';
+}

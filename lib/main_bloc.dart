@@ -112,13 +112,22 @@ class MainBloc extends Bloc<MainEvent, MainState> {
     } else if (event is SolarSelected) {
       solarDate = event.solar;
       dispatch(SolarChanged());
+    } else if (event is LunarSelected) {
+      List<String> ddMMyyyy = event.lunar.split('/');
+      solarDate = _convertLunar2Solar(
+          int.parse(ddMMyyyy[0]),
+          int.parse(ddMMyyyy[1]),
+          int.parse(ddMMyyyy[2]),
+          lunarMonth.endsWith('Nhuận') ? 1 : 0,
+          7);
+      dispatch(SolarChanged());
     }
   }
 
   void _initDateFormat() {
     print('_initDateFormat');
     weekFormat = DateFormat("EEEE", "vi");
-    monthYearFormat = DateFormat("MMMM y", "vi");
+    monthYearFormat = DateFormat("MMMM, y", "vi");
     ddMMyyyyFormat = DateFormat('dd/MM/yyyy', "vi");
   }
 
@@ -325,5 +334,63 @@ class MainBloc extends Bloc<MainEvent, MainState> {
 
     return Lunar(result[0], result[1], result[2], lunarMonth, canChiDay,
         canChiMonth, canChiYear, hours);
+  }
+
+  /**
+   * http://www.tondering.dk/claus/calendar.html
+   * Section: Is there a formula for calculating the Julian day number?
+   *
+   * @param jd - the number of days since 1 January 4713 BC (Julian calendar)
+   * @return
+   */
+  static DateTime _jdToDate(int jd) {
+    int a, b, c;
+    if (jd > 2299160) {
+      // After 5/10/1582, Gregorian calendar
+      a = jd + 32044;
+      b = (4 * a + 3) ~/ 146097;
+      c = a - (b * 146097) ~/ 4;
+    } else {
+      b = 0;
+      c = jd + 32082;
+    }
+    int d = (4 * c + 3) ~/ 1461;
+    int e = c - (1461 * d) ~/ 4;
+    int m = (5 * e + 2) ~/ 153;
+    int day = e - (153 * m + 2) ~/ 5 + 1;
+    int month = m + 3 - 12 * (m ~/ 10);
+    int year = b * 100 + d - 4800 + m ~/ 10;
+    return DateTime(year, month, day);
+  }
+
+  DateTime _convertLunar2Solar(int lunarDay, int lunarMonth, int lunarYear,
+      int lunarLeap, double timeZone) {
+    int a11, b11;
+    if (lunarMonth < 11) {
+      a11 = _getLunarMonth11(lunarYear - 1, timeZone);
+      b11 = _getLunarMonth11(lunarYear, timeZone);
+    } else {
+      a11 = _getLunarMonth11(lunarYear, timeZone);
+      b11 = _getLunarMonth11(lunarYear + 1, timeZone);
+    }
+    int k = (0.5 + (a11 - 2415021.076998695) / 29.530588853).floor();
+    int off = lunarMonth - 11;
+    if (off < 0) {
+      off += 12;
+    }
+    if (b11 - a11 > 365) {
+      int leapOff = _getLeapMonthOffset(a11, timeZone);
+      int leapMonth = leapOff - 2;
+      if (leapMonth < 0) {
+        leapMonth += 12;
+      }
+      if (lunarLeap != 0 && lunarMonth != leapMonth) {
+        return DateTime(0, 0, 0);
+      } else if (lunarLeap != 0 || off >= leapOff) {
+        off += 1;
+      }
+    }
+    int monthStart = _getNewMoonDay(k + off, timeZone);
+    return _jdToDate(monthStart + lunarDay - 1);
   }
 }

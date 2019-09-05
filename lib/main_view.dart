@@ -20,6 +20,7 @@ class _MainState extends State<MainView> {
     const Choice(title: 'Tìm Ngày Âm', icon: CustomIcons.moon),
   ];
   DateTime _solar = DateTime.now();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -43,8 +44,8 @@ class _MainState extends State<MainView> {
             _solar = state.solar;
             return Scaffold(
               appBar: AppBar(
-                title: Text(
-                    mainBloc.monthYearFormat.format(_solar).toUpperCase()),
+                title:
+                    Text(mainBloc.monthYearFormat.format(_solar).toUpperCase()),
                 centerTitle: true,
                 actions: <Widget>[
                   // overflow menu
@@ -58,12 +59,53 @@ class _MainState extends State<MainView> {
                           final DateTime picked = await showDatePicker(
                             context: context,
                             initialDate: _solar,
-                            firstDate: DateTime(2015, 8),
-                            lastDate: DateTime(2101),
+                            firstDate: DateTime(1),
+                            lastDate: DateTime(3000),
                           );
                           mainBloc.dispatch(SolarSelected(solar: picked));
                           break;
                         case 2: // Lunar
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: const Text('Ngày Âm'),
+                                  content: Form(
+                                    key: _formKey,
+                                    autovalidate: true,
+                                    child: TextFormField(
+                                      keyboardType: TextInputType.datetime,
+                                      decoration: const InputDecoration(
+                                        border: OutlineInputBorder(),
+                                        labelText: 'Ngày/Tháng/Năm',
+                                      ),
+                                      maxLines: 1,
+                                      validator: _validateNgayThangNam,
+                                      onSaved: (value) {
+                                        Navigator.pop(context);
+                                        mainBloc.dispatch(LunarSelected(lunar: value));
+                                      },
+                                    ),
+                                  ),
+                                  actions: <Widget>[
+                                    FlatButton(
+                                      child: const Text('DISAGREE'),
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                    ),
+                                    FlatButton(
+                                      child: const Text('AGREE'),
+                                      onPressed: _handleSubmitted,
+                                    ),
+                                  ],
+                                );
+                              }).then<void>((value) {
+                            // The value passed to Navigator.pop() or null.
+                            if (value != null) {
+                              print('You selected: $value');
+                            }
+                          });
                           break;
                       }
                     },
@@ -214,5 +256,20 @@ class _MainState extends State<MainView> {
   _openGithub() {
     const url = 'https://github.com/de-men/amlich';
     open(url);
+  }
+
+  String _validateNgayThangNam(String value) {
+    if (value.isEmpty) return 'Cần nhập ngày âm';
+    final RegExp nameExp = RegExp(
+        r'^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/)(?:0?[13-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$');
+    if (!nameExp.hasMatch(value)) return 'Nhập theo Ngày/Tháng/Năm';
+    return null;
+  }
+
+  void _handleSubmitted() {
+    final FormState form = _formKey.currentState;
+    if (form.validate()) {
+      form.save();
+    }
   }
 }
