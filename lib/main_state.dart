@@ -1,3 +1,4 @@
+import 'package:licham/lunar.dart';
 import 'package:meta/meta.dart';
 import 'package:equatable/equatable.dart';
 
@@ -19,11 +20,13 @@ class MainFailure extends MainState {
   String toString() => 'LoginFailure { error: $error }';
 }
 
-class SolarUpdate extends MainState {
-  final DateTime date;
+class DateUpdate extends MainState {
+  final DateTime solar;
+  final Lunar lunar;
 
-  SolarUpdate({@required this.date}) : super([date]);
+  DateUpdate({@required this.solar, @required this.lunar})
+      : super([solar, lunar]);
 
   @override
-  String toString() => 'SolarUpdate { date: $date }';
+  String toString() => 'DateUpdate { solar: $solar, lunar: $lunar }';
 }
