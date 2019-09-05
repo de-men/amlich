@@ -10,11 +10,6 @@ class MainUninitialized extends MainState {
   String toString() => 'MainUninitialized';
 }
 
-class MainInitialized extends MainState {
-  @override
-  String toString() => 'MainInitialized';
-}
-
 class MainFailure extends MainState {
   final String error;
 
@@ -22,4 +17,13 @@ class MainFailure extends MainState {
 
   @override
   String toString() => 'LoginFailure { error: $error }';
+}
+
+class MainDateChange extends MainState {
+  final DateTime date;
+
+  MainDateChange({@required this.date}) : super([date]);
+
+  @override
+  String toString() => 'MainDateChange { date: $date }';
 }

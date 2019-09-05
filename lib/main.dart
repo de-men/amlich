@@ -40,15 +40,13 @@ void main() {
 class App extends StatelessWidget {
   Widget build(ct) {
     return MaterialApp(
-        theme: ThemeData(
-            brightness: Brightness.light,
-            accentColor: Colors.red,
-            iconTheme: IconThemeData(color: Colors.red)),
-        title: "Âm Lịch",
-        home: BlocProvider(
-          builder: (context) => MainBloc(),
-          child: MainView(),
-        ));
+      theme: ThemeData(
+          brightness: Brightness.light,
+          accentColor: Colors.red,
+          iconTheme: IconThemeData(color: Colors.red)),
+      title: "Âm Lịch",
+      home: MainView(),
+    );
   }
 }
 
