@@ -1,3 +1,4 @@
+import 'package:meta/meta.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class MainEvent extends Equatable {
@@ -32,4 +33,13 @@ class PreviousSelected extends MainEvent {
 class NextSelected extends MainEvent {
   @override
   String toString() => 'NextSelected';
+}
+
+class SolarSelected extends MainEvent {
+  final DateTime solar;
+
+  SolarSelected({@required this.solar}) : super([solar]);
+
+  @override
+  String toString() => 'SolarSelected { solar: $solar }';
 }

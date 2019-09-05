@@ -19,6 +19,7 @@ class _MainState extends State<MainView> {
     const Choice(title: 'Tìm Ngày Dương', icon: CustomIcons.sun),
     const Choice(title: 'Tìm Ngày Âm', icon: CustomIcons.moon),
   ];
+  DateTime _solar = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
@@ -39,17 +40,32 @@ class _MainState extends State<MainView> {
         builder: (context, state) {
           print('_buildTitle $state');
           if (state is DateUpdate) {
+            _solar = state.solar;
             return Scaffold(
               appBar: AppBar(
                 title: Text(
-                    mainBloc.monthYearFormat.format(state.solar).toUpperCase()),
+                    mainBloc.monthYearFormat.format(_solar).toUpperCase()),
                 centerTitle: true,
                 actions: <Widget>[
                   // overflow menu
                   PopupMenuButton<Choice>(
-                    onSelected: (choice) => {
-                      if (choices.indexOf(choice) == 0)
-                        {mainBloc.dispatch(TodaySelected())}
+                    onSelected: (choice) async {
+                      switch (choices.indexOf(choice)) {
+                        case 0: // Today
+                          mainBloc.dispatch(TodaySelected());
+                          break;
+                        case 1: // Solar
+                          final DateTime picked = await showDatePicker(
+                            context: context,
+                            initialDate: _solar,
+                            firstDate: DateTime(2015, 8),
+                            lastDate: DateTime(2101),
+                          );
+                          mainBloc.dispatch(SolarSelected(solar: picked));
+                          break;
+                        case 2: // Lunar
+                          break;
+                      }
                     },
                     itemBuilder: (BuildContext context) {
                       return choices.map((Choice choice) {
@@ -83,11 +99,11 @@ class _MainState extends State<MainView> {
                                     MainAxisAlignment.spaceAround,
                                 children: <Widget>[
                                   Text(
-                                    '${state.solar.day}',
+                                    '${_solar.day}',
                                     style: Theme.of(context).textTheme.display4,
                                   ),
                                   Text(
-                                    mainBloc.weekFormat.format(state.solar),
+                                    mainBloc.weekFormat.format(_solar),
                                     style: Theme.of(context).textTheme.title,
                                   ),
                                 ],

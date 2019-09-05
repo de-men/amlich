@@ -109,6 +109,9 @@ class MainBloc extends Bloc<MainEvent, MainState> {
     } else if (event is NextSelected) {
       solarDate = solarDate.add(Duration(days: 1));
       dispatch(SolarChanged());
+    } else if (event is SolarSelected) {
+      solarDate = event.solar;
+      dispatch(SolarChanged());
     }
   }
 
