@@ -23,8 +23,11 @@ class MainBloc extends Bloc<MainEvent, MainState> {
       Intl.defaultLocale = "vi_VN";
       initializeDateFormatting("vi", null).then((_) => _initDateFormat());
       solarDate = DateTime.now();
-      yield MainDateChange(date: solarDate);
-      // yield MainInitialized();
+      yield SolarUpdate(date: solarDate);
+      dispatch(SolarChanged());
+    }
+
+    if (event is SolarChanged) {
     }
   }
 

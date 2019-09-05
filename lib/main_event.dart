@@ -8,3 +8,13 @@ class AppStarted extends MainEvent {
   @override
   String toString() => 'AppStarted';
 }
+
+class SolarChanged extends MainEvent {
+  @override
+  String toString() => 'SolarChanged';
+}
+
+class LunarChanged extends MainEvent {
+  @override
+  String toString() => 'LunarChanged';
+}

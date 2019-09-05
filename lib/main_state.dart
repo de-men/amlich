@@ -19,11 +19,11 @@ class MainFailure extends MainState {
   String toString() => 'LoginFailure { error: $error }';
 }
 
-class MainDateChange extends MainState {
+class SolarUpdate extends MainState {
   final DateTime date;
 
-  MainDateChange({@required this.date}) : super([date]);
+  SolarUpdate({@required this.date}) : super([date]);
 
   @override
-  String toString() => 'MainDateChange { date: $date }';
+  String toString() => 'SolarUpdate { date: $date }';
 }

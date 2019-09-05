@@ -75,11 +75,10 @@ class _MainState extends State<MainView> {
 
   BlocBuilder _buildTitle(MainBloc bloc) {
     return BlocBuilder<MainBloc, MainState>(
-      condition: (previousState, currentState) =>
-          currentState is MainDateChange,
+      condition: (previousState, currentState) => currentState is SolarUpdate,
       builder: (context, state) {
         print('_buildTitle $state');
-        if (state is MainDateChange) {
+        if (state is SolarUpdate) {
           return Text(bloc.monthYearFormat.format(state.date).toUpperCase());
         }
         return Text("Today");
@@ -94,20 +93,45 @@ class _MainState extends State<MainView> {
         if (state is MainUninitialized) {
           return LoadingIndicator();
         }
-        if (state is MainDateChange) {
+        if (state is SolarUpdate) {
           return LayoutBuilder(
               builder: (context, constraints) => Column(
                     children: <Widget>[
-                      Expanded(child: Text('Top')),
+                      Expanded(child: _buildSolar(bloc)),
                       Divider(thickness: 8),
                       SizedBox(
                         height:
                             (constraints.maxHeight - constraints.minHeight) *
                                 0.4,
-                        child: Text('Bottom'),
+                        child: Text(''),
                       )
                     ],
                   ));
+        }
+        return Text("Body");
+      },
+    );
+  }
+
+  BlocBuilder _buildSolar(MainBloc bloc) {
+    return BlocBuilder<MainBloc, MainState>(
+      condition: (previousState, currentState) => currentState is SolarUpdate,
+      builder: (context, state) {
+        print('_buildSolar $state');
+        if (state is SolarUpdate) {
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              Text(
+                '${state.date.day}',
+                style: Theme.of(context).textTheme.display4,
+              ),
+              Text(
+                bloc.weekFormat.format(state.date),
+                style: Theme.of(context).textTheme.title,
+              ),
+            ],
+          );
         }
         return Text("Body");
       },
