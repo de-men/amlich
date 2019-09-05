@@ -313,6 +313,6 @@ class MainBloc extends Bloc<MainEvent, MainState> {
         CHI[(lunarMonthIndex + 5) % CHI.length];
     canChiYear = CAN[canYearIndex] + " " + CHI[year % CHI.length];
 
-    return Lunar(result[0], result[1], result[2], lunarMonth);
+    return Lunar(result[0], result[1], result[2], lunarMonth, canChiDay, canChiMonth, canChiYear);
   }
 }

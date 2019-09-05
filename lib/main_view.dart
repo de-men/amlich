@@ -63,8 +63,23 @@ class _MainState extends State<MainView> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: <Widget>[
-                                Text(
-                                  'Left',
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: <Widget>[
+                                    Text(
+                                      'Tháng ${state.lunar.canChiMonth}',
+                                      style: Theme.of(context).textTheme.title,
+                                    ),
+                                    Text(
+                                      'Ngày ${state.lunar.canChiDay}',
+                                      style:
+                                          Theme.of(context).textTheme.title,
+                                    ),
+                                    Text(
+                                      'Năm ${state.lunar.canchiYear}',
+                                      style: Theme.of(context).textTheme.title,
+                                    ),
+                                  ],
                                 ),
                                 Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
