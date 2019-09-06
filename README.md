@@ -1,11 +1,10 @@
 # Âm lịch
 
-[A web app](http://amlich.demen.org) that uses [AngularDart](https://webdev.dartlang.org/angular) and
-[AngularDart Components](https://webdev.dartlang.org/components).
+[A web app](https://amlich.demen.org) that uses [Flutter for web](https://flutter.dev/web).
 
 Created from templates made available by Stagehand under a BSD-style
-[license](https://github.com/dart-lang/stagehand/blob/master/LICENSE).
+[license](https://github.com/de-men/amlich/blob/master/LICENSE).
     
 * Deployment instructions
 
-    webdev build -r -o web:docs
+    flutter build web
