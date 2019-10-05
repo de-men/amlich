@@ -83,7 +83,8 @@ class _MainState extends State<MainView> {
                                       validator: _validateNgayThangNam,
                                       onSaved: (value) {
                                         Navigator.pop(context);
-                                        mainBloc.dispatch(LunarSelected(lunar: value));
+                                        mainBloc.dispatch(
+                                            LunarSelected(lunar: value));
                                       },
                                     ),
                                   ),
@@ -203,9 +204,16 @@ class _MainState extends State<MainView> {
                                     ),
                                   ],
                                 ),
-                                Text(
-                                  'Giờ Hoàng Đạo\n${state.lunar.hours}',
-                                  style: Theme.of(context).textTheme.body1,
+                                Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: state.lunar.hours
+                                      .map<Text>((String hour) {
+                                    return Text(hour,
+                                        style:
+                                            Theme.of(context).textTheme.body1);
+                                  }).toList(),
                                 ),
                               ],
                             ),

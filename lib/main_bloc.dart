@@ -263,15 +263,13 @@ class MainBloc extends Bloc<MainEvent, MainState> {
     final chiDayIndex = (dayNumber + 5) % CHI.length;
     canChiDay = CAN[(dayNumber + 3) % CAN.length] + " " + CHI[chiDayIndex];
 
-    hours = "";
+    hours = List();
     final shilfD = (chiDayIndex % 6) * 2;
     for (var i = 0; i < 12; i++) {
       if (D[(i - shilfD) % 12]) {
-        hours += HOUR[i] + '\n';
+        hours.add(HOUR[i]);
       }
     }
-
-    hours = hours.trim();
 
     int k = ((dayNumber - 2415021.076998695) / 29.530588853).floor();
     int monthStart = _getNewMoonDay(k + 1, timeZone);
@@ -315,7 +313,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
   String canChiDay;
   String canChiMonth;
   String canChiYear;
-  String hours;
+  List<String> hours;
   Lunar _calculate(DateTime date) {
     List<int> result = _convertSolar2Lunar(date.day, date.month, date.year, 7);
     lunarMonthIndex = result[1];
