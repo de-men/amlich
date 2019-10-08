@@ -6,7 +6,7 @@ void main() {
   MainBloc mainBloc;
 
   setUp(() {
-    mainBloc = MainBloc();
+    mainBloc = MainBloc(DateTime.now());
   });
 
   test('initial state is correct', () {

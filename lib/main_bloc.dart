@@ -85,7 +85,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
     "Hợi (21h-23h)"
   ];
 
-  MainBloc();
+  MainBloc(this.solarDate);
 
   @override
   MainState get initialState => MainUninitialized();
@@ -95,7 +95,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
     if (event is AppStarted) {
       Intl.defaultLocale = "vi_VN";
       initializeDateFormatting("vi", null).then((_) => _initDateFormat());
-      solarDate = DateTime.now();
+      solarDate = solarDate ?? DateTime.now();
       dispatch(SolarChanged());
     } else if (event is SolarChanged) {
       lunarDate = _calculate(solarDate);
@@ -314,6 +314,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
   String canChiMonth;
   String canChiYear;
   List<String> hours;
+
   Lunar _calculate(DateTime date) {
     List<int> result = _convertSolar2Lunar(date.day, date.month, date.year, 7);
     lunarMonthIndex = result[1];

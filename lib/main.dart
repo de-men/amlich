@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:licham/main_bloc.dart';
 import 'package:licham/main_event.dart';
 import 'package:licham/main_view.dart';
@@ -27,10 +28,12 @@ class SimpleBlocDelegate extends BlocDelegate {
 
 void main() {
   BlocSupervisor.delegate = SimpleBlocDelegate();
+  DateTime date = _getDate(Uri.base.queryParameters);
   runApp(
     BlocProvider<MainBloc>(
       builder: (context) {
-        return MainBloc()..dispatch(AppStarted());
+        return MainBloc(date)
+          ..dispatch(AppStarted());
       },
       child: App(),
     ),
@@ -44,6 +47,15 @@ class App extends StatelessWidget {
       title: "Âm Lịch",
       home: MainView(),
     );
+  }
+}
+
+DateTime _getDate(Map<String, String> queryParameters) {
+  final date = queryParameters['date'];
+  try {
+    return DateFormat("dd-MM-yyyy", "en_US").parse(date);
+  } on Exception {
+    return DateTime.now();
   }
 }
 
