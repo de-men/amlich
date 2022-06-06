@@ -1,8 +1,8 @@
-import 'package:meta/meta.dart';
 import 'package:equatable/equatable.dart';
+import 'package:meta/meta.dart';
 
 abstract class MainEvent extends Equatable {
-  MainEvent([List props = const []]) : super(props);
+  List<Object?> get props => const [];
 }
 
 class AppStarted extends MainEvent {
@@ -36,19 +36,25 @@ class NextSelected extends MainEvent {
 }
 
 class SolarSelected extends MainEvent {
-  final DateTime solar;
+  final DateTime? solar;
 
-  SolarSelected({@required this.solar}) : super([solar]);
+  SolarSelected({required this.solar});
 
   @override
   String toString() => 'SolarSelected { solar: $solar }';
+
+  @override
+  List<Object?> get props => [solar];
 }
 
 class LunarSelected extends MainEvent {
-  final String lunar;
+  final String? lunar;
 
-  LunarSelected({@required this.lunar}) : super([lunar]);
+  LunarSelected({required this.lunar});
 
   @override
   String toString() => 'LunarSelected { lunar: $lunar }';
+
+  @override
+  List<Object?> get props => [lunar];
 }

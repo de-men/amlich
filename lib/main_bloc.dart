@@ -1,4 +1,4 @@
-import 'dart:async';
+import 'dart:math' as math;
 
 import 'package:bloc/bloc.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -6,15 +6,14 @@ import 'package:intl/intl.dart';
 import 'package:licham/lunar.dart';
 import 'package:licham/main_event.dart';
 import 'package:licham/main_state.dart';
-import 'dart:math' as math;
 
 class MainBloc extends Bloc<MainEvent, MainState> {
-  DateFormat weekFormat;
-  DateFormat monthYearFormat;
-  DateFormat ddMMyyyyFormat;
+  late DateFormat weekFormat;
+  late DateFormat monthYearFormat;
+  DateFormat? ddMMyyyyFormat;
 
-  DateTime solarDate;
-  Lunar lunarDate;
+  DateTime? solarDate;
+  Lunar? lunarDate;
 
   static final List<String> LUNAR_MONTH = [
     "Tháng Giêng",
@@ -85,43 +84,39 @@ class MainBloc extends Bloc<MainEvent, MainState> {
     "Hợi (21h-23h)"
   ];
 
-  MainBloc(this.solarDate);
-
-  @override
-  MainState get initialState => MainUninitialized();
-
-  @override
-  Stream<MainState> mapEventToState(MainEvent event) async* {
-    if (event is AppStarted) {
-      Intl.defaultLocale = "vi_VN";
-      initializeDateFormatting("vi", null).then((_) => _initDateFormat());
-      solarDate = solarDate ?? DateTime.now();
-      dispatch(SolarChanged());
-    } else if (event is SolarChanged) {
-      lunarDate = _calculate(solarDate);
-      yield DateUpdate(solar: solarDate, lunar: lunarDate);
-    } else if (event is TodaySelected) {
-      solarDate = DateTime.now();
-      dispatch(SolarChanged());
-    } else if (event is PreviousSelected) {
-      solarDate = solarDate.add(Duration(days: -1));
-      dispatch(SolarChanged());
-    } else if (event is NextSelected) {
-      solarDate = solarDate.add(Duration(days: 1));
-      dispatch(SolarChanged());
-    } else if (event is SolarSelected) {
-      solarDate = event.solar;
-      dispatch(SolarChanged());
-    } else if (event is LunarSelected) {
-      List<String> ddMMyyyy = event.lunar.split('/');
-      solarDate = _convertLunar2Solar(
-          int.parse(ddMMyyyy[0]),
-          int.parse(ddMMyyyy[1]),
-          int.parse(ddMMyyyy[2]),
-          lunarMonth.endsWith('Nhuận') ? 1 : 0,
-          7);
-      dispatch(SolarChanged());
-    }
+  MainBloc(this.solarDate) : super(MainUninitialized()) {
+    on<MainEvent>((event, emit) {
+      if (event is AppStarted) {
+        Intl.defaultLocale = "vi_VN";
+        initializeDateFormatting("vi", null).then((_) => _initDateFormat());
+        solarDate = solarDate ?? DateTime.now();
+        add(SolarChanged());
+      } else if (event is SolarChanged) {
+        lunarDate = _calculate(solarDate!);
+        emit(DateUpdate(solar: solarDate, lunar: lunarDate));
+      } else if (event is TodaySelected) {
+        solarDate = DateTime.now();
+        add(SolarChanged());
+      } else if (event is PreviousSelected) {
+        solarDate = solarDate!.add(Duration(days: -1));
+        add(SolarChanged());
+      } else if (event is NextSelected) {
+        solarDate = solarDate!.add(Duration(days: 1));
+        add(SolarChanged());
+      } else if (event is SolarSelected) {
+        solarDate = event.solar;
+        add(SolarChanged());
+      } else if (event is LunarSelected) {
+        List<String> ddMMyyyy = event.lunar!.split('/');
+        solarDate = _convertLunar2Solar(
+            int.parse(ddMMyyyy[0]),
+            int.parse(ddMMyyyy[1]),
+            int.parse(ddMMyyyy[2]),
+            lunarMonth!.endsWith('Nhuận') ? 1 : 0,
+            7);
+        add(SolarChanged());
+      }
+    });
   }
 
   void _initDateFormat() {
@@ -263,11 +258,11 @@ class MainBloc extends Bloc<MainEvent, MainState> {
     final chiDayIndex = (dayNumber + 5) % CHI.length;
     canChiDay = CAN[(dayNumber + 3) % CAN.length] + " " + CHI[chiDayIndex];
 
-    hours = List();
+    hours = [];
     final shilfD = (chiDayIndex % 6) * 2;
     for (var i = 0; i < 12; i++) {
       if (D[(i - shilfD) % 12]) {
-        hours.add(HOUR[i]);
+        hours!.add(HOUR[i]);
       }
     }
 
@@ -308,19 +303,19 @@ class MainBloc extends Bloc<MainEvent, MainState> {
     return [lunarDay, lunarMonth, lunarYear, lunarLeap];
   }
 
-  static int lunarMonthIndex;
-  String lunarMonth;
-  String canChiDay;
-  String canChiMonth;
-  String canChiYear;
-  List<String> hours;
+  static late int lunarMonthIndex;
+  String? lunarMonth;
+  String? canChiDay;
+  String? canChiMonth;
+  String? canChiYear;
+  List<String>? hours;
 
   Lunar _calculate(DateTime date) {
     List<int> result = _convertSolar2Lunar(date.day, date.month, date.year, 7);
     lunarMonthIndex = result[1];
     final year = result[2];
     lunarMonth = LUNAR_MONTH[lunarMonthIndex - 1];
-    if (result[3] != 0) lunarMonth += " Nhuận";
+    if (result[3] != 0) "$lunarMonth Nhuận";
 
     final canYearIndex = year % CAN.length;
     final canMonthOfset =

@@ -19,7 +19,7 @@ class _MainState extends State<MainView> {
     const Choice(title: 'Tìm Ngày Dương', icon: CustomIcons.sun),
     const Choice(title: 'Tìm Ngày Âm', icon: CustomIcons.moon),
   ];
-  DateTime _solar = DateTime.now();
+  DateTime? _solar = DateTime.now();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
@@ -28,7 +28,7 @@ class _MainState extends State<MainView> {
     return BlocListener<MainBloc, MainState>(
       listener: (context, state) {
         if (state is MainFailure) {
-          Scaffold.of(context).showSnackBar(
+          ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text('${state.error}'),
               backgroundColor: Colors.red,
@@ -37,7 +37,7 @@ class _MainState extends State<MainView> {
         }
       },
       child: BlocBuilder<MainBloc, MainState>(
-        condition: (previousState, currentState) => currentState is DateUpdate,
+        buildWhen: (previousState, currentState) => currentState is DateUpdate,
         builder: (context, state) {
           print('_buildTitle $state');
           if (state is DateUpdate) {
@@ -45,7 +45,7 @@ class _MainState extends State<MainView> {
             return Scaffold(
               appBar: AppBar(
                 title:
-                    Text(mainBloc.monthYearFormat.format(_solar).toUpperCase()),
+                    Text(mainBloc.monthYearFormat.format(_solar!).toUpperCase()),
                 centerTitle: true,
                 actions: <Widget>[
                   // overflow menu
@@ -53,16 +53,16 @@ class _MainState extends State<MainView> {
                     onSelected: (choice) async {
                       switch (choices.indexOf(choice)) {
                         case 0: // Today
-                          mainBloc.dispatch(TodaySelected());
+                          mainBloc.add(TodaySelected());
                           break;
                         case 1: // Solar
-                          final DateTime picked = await showDatePicker(
+                          final DateTime? picked = await showDatePicker(
                             context: context,
-                            initialDate: _solar,
+                            initialDate: _solar!,
                             firstDate: DateTime(1),
                             lastDate: DateTime(3000),
                           );
-                          mainBloc.dispatch(SolarSelected(solar: picked));
+                          mainBloc.add(SolarSelected(solar: picked));
                           break;
                         case 2: // Lunar
                           showDialog(
@@ -72,7 +72,8 @@ class _MainState extends State<MainView> {
                                   title: const Text('Ngày Âm'),
                                   content: Form(
                                     key: _formKey,
-                                    autovalidate: true,
+                                    autovalidateMode:
+                                        AutovalidateMode.onUserInteraction,
                                     child: TextFormField(
                                       keyboardType: TextInputType.datetime,
                                       decoration: const InputDecoration(
@@ -83,19 +84,19 @@ class _MainState extends State<MainView> {
                                       validator: _validateNgayThangNam,
                                       onSaved: (value) {
                                         Navigator.pop(context);
-                                        mainBloc.dispatch(
-                                            LunarSelected(lunar: value));
+                                        mainBloc
+                                            .add(LunarSelected(lunar: value));
                                       },
                                     ),
                                   ),
                                   actions: <Widget>[
-                                    FlatButton(
+                                    TextButton(
                                       child: const Text('DISAGREE'),
                                       onPressed: () {
                                         Navigator.pop(context);
                                       },
                                     ),
-                                    FlatButton(
+                                    TextButton(
                                       child: const Text('AGREE'),
                                       onPressed: _handleSubmitted,
                                     ),
@@ -116,7 +117,7 @@ class _MainState extends State<MainView> {
                           value: choice,
                           child: ListTile(
                             leading: Icon(choice.icon),
-                            title: Text(choice.title),
+                            title: Text(choice.title!),
                           ),
                         );
                       }).toList();
@@ -134,7 +135,7 @@ class _MainState extends State<MainView> {
                               IconButton(
                                 icon: Icon(Icons.chevron_left),
                                 onPressed: () {
-                                  mainBloc.dispatch(PreviousSelected());
+                                  mainBloc.add(PreviousSelected());
                                 },
                               ),
                               Column(
@@ -142,19 +143,21 @@ class _MainState extends State<MainView> {
                                     MainAxisAlignment.spaceAround,
                                 children: <Widget>[
                                   Text(
-                                    '${_solar.day}',
-                                    style: Theme.of(context).textTheme.display4,
+                                    '${_solar!.day}',
+                                    style:
+                                        Theme.of(context).textTheme.displayLarge,
                                   ),
                                   Text(
-                                    mainBloc.weekFormat.format(_solar),
-                                    style: Theme.of(context).textTheme.title,
+                                    mainBloc.weekFormat.format(_solar!),
+                                    style:
+                                        Theme.of(context).textTheme.titleMedium,
                                   ),
                                 ],
                               ),
                               IconButton(
                                 icon: Icon(Icons.chevron_right),
                                 onPressed: () {
-                                  mainBloc.dispatch(NextSelected());
+                                  mainBloc.add(NextSelected());
                                 },
                               ),
                             ],
@@ -173,16 +176,19 @@ class _MainState extends State<MainView> {
                                   crossAxisAlignment: CrossAxisAlignment.end,
                                   children: <Widget>[
                                     Text(
-                                      'Tháng ${state.lunar.canChiMonth}',
-                                      style: Theme.of(context).textTheme.body1,
+                                      'Tháng ${state.lunar!.canChiMonth}',
+                                      style:
+                                          Theme.of(context).textTheme.bodyText1,
                                     ),
                                     Text(
-                                      'Ngày ${state.lunar.canChiDay}',
-                                      style: Theme.of(context).textTheme.body1,
+                                      'Ngày ${state.lunar!.canChiDay}',
+                                      style:
+                                          Theme.of(context).textTheme.bodyText1,
                                     ),
                                     Text(
-                                      'Năm ${state.lunar.canchiYear}',
-                                      style: Theme.of(context).textTheme.body1,
+                                      'Năm ${state.lunar!.canchiYear}',
+                                      style:
+                                          Theme.of(context).textTheme.bodyText1,
                                     ),
                                   ],
                                 ),
@@ -190,17 +196,21 @@ class _MainState extends State<MainView> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: <Widget>[
                                     Text(
-                                      '${state.lunar.monthString}',
-                                      style: Theme.of(context).textTheme.title,
+                                      '${state.lunar!.monthString}',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleMedium,
                                     ),
                                     Text(
-                                      '${state.lunar.day}',
+                                      '${state.lunar!.day}',
                                       style:
-                                          Theme.of(context).textTheme.display2,
+                                          Theme.of(context).textTheme.headline2,
                                     ),
                                     Text(
-                                      'Năm ${state.lunar.year}',
-                                      style: Theme.of(context).textTheme.title,
+                                      'Năm ${state.lunar!.year}',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleMedium,
                                     ),
                                   ],
                                 ),
@@ -208,11 +218,12 @@ class _MainState extends State<MainView> {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
                                   crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: state.lunar.hours
+                                  children: state.lunar!.hours!
                                       .map<Text>((String hour) {
                                     return Text(hour,
-                                        style:
-                                            Theme.of(context).textTheme.body1);
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1);
                                   }).toList(),
                                 ),
                               ],
@@ -266,16 +277,16 @@ class _MainState extends State<MainView> {
     open(url);
   }
 
-  String _validateNgayThangNam(String value) {
-    if (value.isEmpty) return 'Cần nhập ngày âm';
+  String? _validateNgayThangNam(String? value) {
+    if (value!.isEmpty) return 'Cần nhập ngày âm';
     final RegExp nameExp = RegExp(
-        r'^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/)(?:0?[13-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$');
+        r'^(?:31([/\-.])(?:0?[13578]|1[02])\1|(?:29|30)(/)(?:0?[13-9]|1[0-2])\2)(?:1[6-9]|[2-9]\d)?\d{2}$|^29([/\-.])0?2\3(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:16|[2468][048]|[3579][26])00)$|^(?:0?[1-9]|1\d|2[0-8])([/\-.])(?:0?[1-9]|1[0-2])\4(?:1[6-9]|[2-9]\d)?\d{2}$');
     if (!nameExp.hasMatch(value)) return 'Nhập theo Ngày/Tháng/Năm';
     return null;
   }
 
   void _handleSubmitted() {
-    final FormState form = _formKey.currentState;
+    final FormState form = _formKey.currentState!;
     if (form.validate()) {
       form.save();
     }
