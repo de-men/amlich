@@ -47,7 +47,6 @@ ThemeData _buildDarkTheme() {
   );
   return ThemeData(
     brightness: Brightness.dark,
-    accentColorBrightness: Brightness.dark,
     primaryColor: primaryColor,
     primaryColorDark: const Color(0xFF0050a0),
     primaryColorLight: secondaryColor,

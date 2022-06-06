@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:meta/meta.dart';
 
 abstract class MainEvent extends Equatable {
   List<Object?> get props => const [];

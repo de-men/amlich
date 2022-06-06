@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
 import 'package:licham/lunar.dart';
-import 'package:meta/meta.dart';
 
 abstract class MainState extends Equatable {
   @override
