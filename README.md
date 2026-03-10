@@ -15,25 +15,18 @@ A Vietnamese lunar calendar ([Âm Lịch](https://amlich.demen.org)) web app bui
 - Solar/Lunar focus toggle
 - Dark (celestial) and Light theme
 - Swipe gestures for day and month navigation
+- Download .ics calendar file for any decade
 
-## Add Vietnamese Lunar Calendar to Google Calendar
+## Download Lunar Calendar (.ics)
 
-You can subscribe to the Vietnamese lunar calendar to see lunar dates directly in your Google Calendar:
+You can download the Vietnamese lunar calendar as an `.ics` file and import it into Google Calendar, Apple Calendar, Outlook, or any calendar app:
 
-1. Open [Google Calendar](https://calendar.google.com)
-2. Click **+** next to "Other calendars" in the left sidebar
-3. Select **From URL**
-4. Paste this URL:
+1. Open [amlich.demen.org](https://amlich.demen.org)
+2. Navigate to the year/decade you want
+3. Click **"Tải Âm Lịch 2020s"** (or whichever decade is shown) at the bottom
+4. Import the downloaded `.ics` file into your calendar app
 
-```
-https://calendar.google.com/calendar/ical/demen.org_4jc7p02lkoire319rabglmfifo%40group.calendar.google.com/public/basic.ics
-```
-
-5. Click **Add calendar**
-
-Or click this link to add it directly:
-
-[Add to Google Calendar](https://calendar.google.com/calendar/r?cid=demen.org_4jc7p02lkoire319rabglmfifo@group.calendar.google.com)
+The file is generated client-side from the app's lunar conversion algorithm and covers a full decade (e.g. 2020-2029). Each day includes the lunar date, Can Chi, and moon phase info.
 
 ## URL Parameters
 
