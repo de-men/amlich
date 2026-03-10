@@ -11,5 +11,8 @@ html/
 # Directory created by dartdoc
 doc/api/
 
+# Test coverage
+coverage/
+
 # IDE
 .idea/
