@@ -1,12 +1,18 @@
-# Âm lịch
+# Âm Lịch
 
-[![Codemagic build status](https://api.codemagic.io/apps/5d700ac5166ac90017857c2c/5d700ac5166ac90017857c2b/status_badge.svg)](https://codemagic.io/apps/5d700ac5166ac90017857c2c/5d700ac5166ac90017857c2b/latest_build)
+[![CI](https://github.com/de-men/amlich/actions/workflows/ci.yml/badge.svg)](https://github.com/de-men/amlich/actions/workflows/ci.yml)
 
-[A web app](https://amlich.demen.org) that uses [Flutter for web](https://flutter.dev/web).
+[A web app](https://amlich.demen.org) that converts between solar (Gregorian) and Vietnamese lunar dates, built with [Flutter for web](https://flutter.dev/web).
 
-Created from templates made available by Stagehand under a BSD-style
-[license](https://github.com/de-men/amlich/blob/master/LICENSE).
-    
-* Deployment instructions
+## Getting Started
 
-    flutter build web
+```bash
+flutter pub get
+flutter run -d chrome
+```
+
+## Deployment
+
+```bash
+flutter build web
+```

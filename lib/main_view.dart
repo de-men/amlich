@@ -46,9 +46,7 @@ class _MainState extends State<MainView> {
             return Scaffold(
               appBar: AppBar(
                 title: Text(
-                  mainBloc.monthYearFormat
-                      .format(_solar!)
-                      .toUpperCase(),
+                  mainBloc.monthYearFormat.format(_solar!).toUpperCase(),
                 ),
                 centerTitle: true,
                 actions: <Widget>[
@@ -85,8 +83,7 @@ class _MainState extends State<MainView> {
                                     validator: _validateNgayThangNam,
                                     onSaved: (value) {
                                       Navigator.pop(context);
-                                      mainBloc
-                                          .add(LunarSelected(lunar: value));
+                                      mainBloc.add(LunarSelected(lunar: value));
                                     },
                                   ),
                                 ),
@@ -139,13 +136,11 @@ class _MainState extends State<MainView> {
                             children: <Widget>[
                               Text(
                                 '${_solar!.day}',
-                                style:
-                                    Theme.of(context).textTheme.displayLarge,
+                                style: Theme.of(context).textTheme.displayLarge,
                               ),
                               Text(
                                 mainBloc.weekFormat.format(_solar!),
-                                style:
-                                    Theme.of(context).textTheme.titleMedium,
+                                style: Theme.of(context).textTheme.titleMedium,
                               ),
                             ],
                           ),
@@ -171,18 +166,15 @@ class _MainState extends State<MainView> {
                             children: <Widget>[
                               Text(
                                 'Tháng ${state.lunar!.canChiMonth}',
-                                style:
-                                    Theme.of(context).textTheme.bodyLarge,
+                                style: Theme.of(context).textTheme.bodyLarge,
                               ),
                               Text(
                                 'Ngày ${state.lunar!.canChiDay}',
-                                style:
-                                    Theme.of(context).textTheme.bodyLarge,
+                                style: Theme.of(context).textTheme.bodyLarge,
                               ),
                               Text(
                                 'Năm ${state.lunar!.canchiYear}',
-                                style:
-                                    Theme.of(context).textTheme.bodyLarge,
+                                style: Theme.of(context).textTheme.bodyLarge,
                               ),
                             ],
                           ),
@@ -191,8 +183,7 @@ class _MainState extends State<MainView> {
                             children: <Widget>[
                               Text(
                                 '${state.lunar!.monthString}',
-                                style:
-                                    Theme.of(context).textTheme.titleMedium,
+                                style: Theme.of(context).textTheme.titleMedium,
                               ),
                               Text(
                                 '${state.lunar!.day}',
@@ -201,8 +192,7 @@ class _MainState extends State<MainView> {
                               ),
                               Text(
                                 'Năm ${state.lunar!.year}',
-                                style:
-                                    Theme.of(context).textTheme.titleMedium,
+                                style: Theme.of(context).textTheme.titleMedium,
                               ),
                             ],
                           ),

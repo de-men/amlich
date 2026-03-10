@@ -144,15 +144,13 @@ class MainBloc extends Bloc<MainEvent, MainState> {
     final k = (0.5 + (a11 - 2415021.076998695) / 29.530588853).floor();
     int last;
     var i = 1;
-    var arc =
-        (_getSunLongitude(_getNewMoonDay(k + i, timeZone), timeZone) / 30)
-            .floor();
+    var arc = (_getSunLongitude(_getNewMoonDay(k + i, timeZone), timeZone) / 30)
+        .floor();
     do {
       last = arc;
       i++;
-      arc =
-          (_getSunLongitude(_getNewMoonDay(k + i, timeZone), timeZone) / 30)
-              .floor();
+      arc = (_getSunLongitude(_getNewMoonDay(k + i, timeZone), timeZone) / 30)
+          .floor();
     } while (arc != last && i < 14);
     return i - 1;
   }
@@ -161,8 +159,8 @@ class MainBloc extends Bloc<MainEvent, MainState> {
     final t = (jdn - 2451545.0) / 36525;
     final t2 = t * t;
     const dr = math.pi / 180;
-    final m = 357.52910 + 35999.05030 * t - 0.0001559 * t2 -
-        0.00000048 * t * t2;
+    final m =
+        357.52910 + 35999.05030 * t - 0.0001559 * t2 - 0.00000048 * t * t2;
     final l0 = 280.46645 + 36000.76983 * t + 0.0003032 * t2;
     var dl = (1.914600 - 0.004817 * t - 0.000014 * t2) * math.sin(dr * m);
     dl = dl +
@@ -194,21 +192,15 @@ class MainBloc extends Bloc<MainEvent, MainState> {
     const dr = math.pi / 180;
     var jd1 =
         2415020.75933 + 29.53058868 * k + 0.0001178 * t2 - 0.000000155 * t3;
-    jd1 = jd1 +
-        0.00033 * math.sin((166.56 + 132.87 * t - 0.009173 * t2) * dr);
-    final m = 359.2242 + 29.10535608 * k - 0.0000333 * t2 -
-        0.00000347 * t3;
-    final mpr = 306.0253 + 385.81691806 * k + 0.0107306 * t2 +
-        0.00001236 * t3;
-    final f = 21.2964 + 390.67050646 * k - 0.0016528 * t2 -
-        0.00000239 * t3;
+    jd1 = jd1 + 0.00033 * math.sin((166.56 + 132.87 * t - 0.009173 * t2) * dr);
+    final m = 359.2242 + 29.10535608 * k - 0.0000333 * t2 - 0.00000347 * t3;
+    final mpr = 306.0253 + 385.81691806 * k + 0.0107306 * t2 + 0.00001236 * t3;
+    final f = 21.2964 + 390.67050646 * k - 0.0016528 * t2 - 0.00000239 * t3;
     var c1 = (0.1734 - 0.000393 * t) * math.sin(m * dr) +
         0.0021 * math.sin(2 * dr * m);
     c1 = c1 - 0.4068 * math.sin(mpr * dr) + 0.0161 * math.sin(dr * 2 * mpr);
     c1 = c1 - 0.0004 * math.sin(dr * 3 * mpr);
-    c1 = c1 +
-        0.0104 * math.sin(dr * 2 * f) -
-        0.0051 * math.sin(dr * (m + mpr));
+    c1 = c1 + 0.0104 * math.sin(dr * 2 * f) - 0.0051 * math.sin(dr * (m + mpr));
     c1 = c1 -
         0.0074 * math.sin(dr * (m - mpr)) +
         0.0004 * math.sin(dr * (2 * f + m));
@@ -310,8 +302,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
   }
 
   Lunar _calculate(DateTime date) {
-    final result =
-        _convertSolar2Lunar(date.day, date.month, date.year, 7);
+    final result = _convertSolar2Lunar(date.day, date.month, date.year, 7);
     lunarMonthIndex = result[1];
     final year = result[2];
     lunarMonth = _lunarMonths[lunarMonthIndex - 1];
