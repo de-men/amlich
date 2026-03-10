@@ -98,8 +98,7 @@ void main() {
 
   group('date navigation', () {
     test('next day advances solar date', () async {
-      final bloc = MainBloc(DateTime(2024, 2, 10))
-        ..add(const AppStarted());
+      final bloc = MainBloc(DateTime(2024, 2, 10))..add(const AppStarted());
 
       final states = <DateUpdate>[];
       final sub = bloc.stream
@@ -120,8 +119,7 @@ void main() {
     });
 
     test('previous day goes back', () async {
-      final bloc = MainBloc(DateTime(2024, 2, 10))
-        ..add(const AppStarted());
+      final bloc = MainBloc(DateTime(2024, 2, 10))..add(const AppStarted());
 
       final states = <DateUpdate>[];
       final sub = bloc.stream
@@ -142,8 +140,7 @@ void main() {
     });
 
     test('solar date selection updates lunar', () async {
-      final bloc = MainBloc(DateTime(2024))
-        ..add(const AppStarted());
+      final bloc = MainBloc(DateTime(2024))..add(const AppStarted());
 
       final states = <DateUpdate>[];
       final sub = bloc.stream
