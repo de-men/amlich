@@ -36,8 +36,39 @@ jobs:
       - name: Analyze project source
         run: flutter analyze --fatal-infos
 
-      - name: Run tests
-        run: flutter test
+      - name: Run tests with coverage
+        run: flutter test --coverage
+
+      - name: Generate coverage badge
+        if: github.ref == 'refs/heads/master'
+        run: |
+          COVERAGE=$(python3 -c "
+          import re
+          with open('coverage/lcov.info') as f:
+              content = f.read()
+          total = hit = 0
+          for block in content.split('end_of_record'):
+              lf = re.search(r'LF:(\d+)', block)
+              lh = re.search(r'LH:(\d+)', block)
+              if lf and lh:
+                  total += int(lf.group(1))
+                  hit += int(lh.group(1))
+          print(f'{hit/total*100:.0f}' if total else '0')
+          ")
+          echo "COVERAGE=$COVERAGE" >> $GITHUB_ENV
+
+      - name: Create coverage badge
+        if: github.ref == 'refs/heads/master'
+        uses: schneegans/dynamic-badges-action@v1.7.0
+        with:
+          auth: ${{ secrets.GIST_TOKEN }}
+          gistID: ${{ vars.COVERAGE_GIST_ID }}
+          filename: coverage.json
+          label: coverage
+          message: ${{ env.COVERAGE }}%
+          valColorRange: ${{ env.COVERAGE }}
+          minColorRange: 50
+          maxColorRange: 90
 
       - name: Build web
         run: flutter build web --release --base-href /
