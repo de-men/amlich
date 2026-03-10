@@ -262,11 +262,18 @@ class _MainState extends State<MainView> {
   }
 
   String? _validateNgayThangNam(String? value) {
-    if (value!.isEmpty) return 'Cần nhập ngày âm';
-    final nameExp = RegExp(
-      r'^(?:31([/\-.])(?:0?[13578]|1[02])\1|(?:29|30)(/)(?:0?[13-9]|1[0-2])\2)(?:1[6-9]|[2-9]\d)?\d{2}$|^29([/\-.])0?2\3(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:16|[2468][048]|[3579][26])00)$|^(?:0?[1-9]|1\d|2[0-8])([/\-.])(?:0?[1-9]|1[0-2])\4(?:1[6-9]|[2-9]\d)?\d{2}$',
-    );
-    if (!nameExp.hasMatch(value)) return 'Nhập theo Ngày/Tháng/Năm';
+    if (value == null || value.isEmpty) return 'Cần nhập ngày âm';
+    final parts = value.split('/');
+    if (parts.length != 3) return 'Nhập theo Ngày/Tháng/Năm';
+    final day = int.tryParse(parts[0]);
+    final month = int.tryParse(parts[1]);
+    final year = int.tryParse(parts[2]);
+    if (day == null || month == null || year == null) {
+      return 'Nhập theo Ngày/Tháng/Năm';
+    }
+    if (day < 1 || day > 30) return 'Ngày từ 1 đến 30';
+    if (month < 1 || month > 12) return 'Tháng từ 1 đến 12';
+    if (year < 1) return 'Năm không hợp lệ';
     return null;
   }
 
