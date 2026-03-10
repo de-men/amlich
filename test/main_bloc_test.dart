@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:licham/lunar.dart';
 import 'package:licham/main_bloc.dart';
 import 'package:licham/main_event.dart';
 import 'package:licham/main_state.dart';
@@ -97,6 +98,28 @@ void main() {
   });
 
   group('date navigation', () {
+    test('today selection uses current date', () async {
+      final bloc = MainBloc(DateTime(2020))..add(const AppStarted());
+
+      final states = <DateUpdate>[];
+      final sub = bloc.stream
+          .where((s) => s is DateUpdate)
+          .cast<DateUpdate>()
+          .listen(states.add);
+
+      await Future<void>.delayed(const Duration(milliseconds: 100));
+      bloc.add(const TodaySelected());
+      await Future<void>.delayed(const Duration(milliseconds: 100));
+
+      final now = DateTime.now();
+      expect(states.last.solar!.day, now.day);
+      expect(states.last.solar!.month, now.month);
+      expect(states.last.solar!.year, now.year);
+
+      await sub.cancel();
+      await bloc.close();
+    });
+
     test('next day advances solar date', () async {
       final bloc = MainBloc(DateTime(2024, 2, 10))..add(const AppStarted());
 
@@ -158,6 +181,106 @@ void main() {
 
       await sub.cancel();
       await bloc.close();
+    });
+
+    test('lunar date selection converts back to solar', () async {
+      final bloc = MainBloc(DateTime(2024, 2, 10))..add(const AppStarted());
+
+      final states = <DateUpdate>[];
+      final sub = bloc.stream
+          .where((s) => s is DateUpdate)
+          .cast<DateUpdate>()
+          .listen(states.add);
+
+      await Future<void>.delayed(const Duration(milliseconds: 100));
+      bloc.add(const LunarSelected(lunar: '1/1/2025'));
+      await Future<void>.delayed(const Duration(milliseconds: 100));
+
+      expect(states.last.solar!.year, 2025);
+      expect(states.last.solar!.month, 1);
+      expect(states.last.solar!.day, 29);
+
+      await sub.cancel();
+      await bloc.close();
+    });
+
+    test('lunar date in month >= 11 converts correctly', () async {
+      final bloc = MainBloc(DateTime(2024, 2, 10))..add(const AppStarted());
+
+      final states = <DateUpdate>[];
+      final sub = bloc.stream
+          .where((s) => s is DateUpdate)
+          .cast<DateUpdate>()
+          .listen(states.add);
+
+      await Future<void>.delayed(const Duration(milliseconds: 100));
+      bloc.add(const LunarSelected(lunar: '1/11/2024'));
+      await Future<void>.delayed(const Duration(milliseconds: 100));
+
+      expect(states.last.solar, isNotNull);
+      expect(states.last.lunar!.month, 11);
+
+      await sub.cancel();
+      await bloc.close();
+    });
+  });
+
+  group('event toString', () {
+    test('AppStarted', () {
+      expect(const AppStarted().toString(), 'AppStarted');
+    });
+
+    test('SolarChanged', () {
+      expect(const SolarChanged().toString(), 'SolarChanged');
+    });
+
+    test('LunarChanged', () {
+      expect(const LunarChanged().toString(), 'LunarChanged');
+    });
+
+    test('TodaySelected', () {
+      expect(const TodaySelected().toString(), 'TodaySelected');
+    });
+
+    test('PreviousSelected', () {
+      expect(const PreviousSelected().toString(), 'PreviousSelected');
+    });
+
+    test('NextSelected', () {
+      expect(const NextSelected().toString(), 'NextSelected');
+    });
+
+    test('SolarSelected', () {
+      final event = SolarSelected(solar: DateTime(2024));
+      expect(event.toString(), contains('SolarSelected'));
+      expect(event.props, [DateTime(2024)]);
+    });
+
+    test('LunarSelected', () {
+      const event = LunarSelected(lunar: '1/1/2024');
+      expect(event.toString(), contains('LunarSelected'));
+      expect(event.props, ['1/1/2024']);
+    });
+  });
+
+  group('state toString', () {
+    test('MainUninitialized', () {
+      expect(const MainUninitialized().toString(), 'MainUninitialized');
+    });
+
+    test('MainFailure', () {
+      const state = MainFailure(error: 'test error');
+      expect(state.toString(), contains('MainFailure'));
+      expect(state.props, ['test error']);
+    });
+
+    test('DateUpdate', () {
+      final state = DateUpdate(
+        solar: DateTime(2024),
+        lunar: const Lunar(1, 1, 2024, null, null, null, null, null),
+      );
+      expect(state.toString(), contains('DateUpdate'));
+      expect(state.props, hasLength(2));
     });
   });
 }
