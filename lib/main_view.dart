@@ -52,20 +52,41 @@ class _MainViewState extends State<MainView> {
                       },
                     ),
                     const SizedBox(height: 12),
-                    _TodayCard(
-                      solar: solar,
-                      lunar: lunar,
-                      bloc: bloc,
-                      lunarFocus: _lunarFocus,
+                    GestureDetector(
+                      onHorizontalDragEnd: (details) {
+                        if (details.primaryVelocity == null) return;
+                        if (details.primaryVelocity! < 0) {
+                          bloc.add(const NextSelected());
+                        } else if (details.primaryVelocity! > 0) {
+                          bloc.add(const PreviousSelected());
+                        }
+                      },
+                      child: _TodayCard(
+                        solar: solar,
+                        lunar: lunar,
+                        bloc: bloc,
+                        lunarFocus: _lunarFocus,
+                      ),
                     ),
                     const SizedBox(height: 12),
-                    _MonthCalendar(
-                      selectedDate: solar,
-                      selectedLunar: lunar,
-                      lunarFocus: _lunarFocus,
-                      onDateSelected: (date) {
-                        bloc.add(SolarSelected(solar: date));
+                    GestureDetector(
+                      onHorizontalDragEnd: (details) {
+                        if (details.primaryVelocity == null) return;
+                        final prevMonth = DateTime(
+                          solar.year,
+                          solar.month + (details.primaryVelocity! < 0 ? 1 : -1),
+                          solar.day.clamp(1, 28),
+                        );
+                        bloc.add(SolarSelected(solar: prevMonth));
                       },
+                      child: _MonthCalendar(
+                        selectedDate: solar,
+                        selectedLunar: lunar,
+                        lunarFocus: _lunarFocus,
+                        onDateSelected: (date) {
+                          bloc.add(SolarSelected(solar: date));
+                        },
+                      ),
                     ),
                     const SizedBox(height: 12),
                     _InfoPanel(lunar: lunar),
@@ -779,59 +800,55 @@ class _InfoPanel extends StatelessWidget {
     List<String> activeHours,
     Color primary,
   ) {
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 6,
-        mainAxisSpacing: 4,
-        crossAxisSpacing: 4,
-      ),
-      itemCount: 12,
-      itemBuilder: (context, i) {
+    return Row(
+      children: List.generate(12, (i) {
         final isActive = activeHours.contains(LunarConverter.hourNames[i]);
 
-        return Container(
-          decoration: BoxDecoration(
-            color:
-                isActive ? primary.withValues(alpha: 0.15) : Colors.transparent,
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(
-              color: isActive
-                  ? primary.withValues(alpha: 0.4)
-                  : theme.textTheme.bodyMedium!.color!.withValues(alpha: 0.15),
+        return Expanded(
+          child: Tooltip(
+            message: '${_hourLabels[i]}: ${_hourTimes[i]}h',
+            child: Container(
+              margin: const EdgeInsets.symmetric(horizontal: 2),
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              decoration: BoxDecoration(
+                color: isActive
+                    ? primary.withValues(alpha: 0.15)
+                    : Colors.transparent,
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(
+                  color: isActive
+                      ? primary.withValues(alpha: 0.4)
+                      : theme.textTheme.bodyMedium!.color!
+                          .withValues(alpha: 0.1),
+                ),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    _hourEmoji[i],
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: isActive ? null : Colors.grey,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    _hourLabels[i],
+                    style: TextStyle(
+                      fontSize: 8,
+                      fontWeight: isActive ? FontWeight.w600 : FontWeight.w400,
+                      color: isActive
+                          ? primary
+                          : theme.textTheme.bodyMedium?.color,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                _hourEmoji[i],
-                style: TextStyle(
-                  fontSize: 18,
-                  color: isActive ? null : Colors.grey,
-                ),
-              ),
-              const SizedBox(height: 2),
-              Text(
-                _hourLabels[i],
-                style: TextStyle(
-                  fontSize: 10,
-                  fontWeight: isActive ? FontWeight.w600 : FontWeight.w400,
-                  color: isActive ? primary : theme.textTheme.bodyMedium?.color,
-                ),
-              ),
-              Text(
-                '${_hourTimes[i]}h',
-                style: TextStyle(
-                  fontSize: 9,
-                  color: theme.textTheme.bodyMedium?.color,
-                ),
-              ),
-            ],
-          ),
         );
-      },
+      }),
     );
   }
 }
