@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:licham/ics_generator.dart';
 import 'package:licham/js/window.dart';
 import 'package:licham/lunar.dart';
 import 'package:licham/lunar_converter.dart';
@@ -91,7 +92,7 @@ class _MainViewState extends State<MainView> {
                     const SizedBox(height: 12),
                     _InfoPanel(lunar: lunar),
                     const SizedBox(height: 12),
-                    _Footer(),
+                    _Footer(selectedYear: solar.year),
                     const SizedBox(height: 24),
                   ],
                 ),
@@ -857,17 +858,26 @@ class _InfoPanel extends StatelessWidget {
 // Footer
 // ---------------------------------------------------------------------------
 class _Footer extends StatelessWidget {
+  const _Footer({required this.selectedYear});
+
+  final int selectedYear;
+
   @override
   Widget build(BuildContext context) {
+    final decadeStart = selectedYear ~/ 10 * 10;
+    final decadeEnd = decadeStart + 9;
+    final label = '${decadeStart}s';
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         TextButton.icon(
-          icon: const Icon(CustomIcons.calendarPlusO, size: 16),
-          label: const Text('Google Calendar'),
-          onPressed: () => open(
-            'https://calendar.google.com/calendar/r?cid=demen.org_4jc7p02lkoire319rabglmfifo@group.calendar.google.com',
-          ),
+          icon: const Icon(Icons.download, size: 16),
+          label: Text('Tải Âm Lịch $label'),
+          onPressed: () {
+            final ics = generateIcs(decadeStart, decadeEnd);
+            download('amlich-$label.ics', ics);
+          },
         ),
         const SizedBox(width: 8),
         TextButton.icon(
