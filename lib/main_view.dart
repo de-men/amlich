@@ -39,62 +39,69 @@ class _MainViewState extends State<MainView> {
             child: Center(
               child: ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 520),
-                child: ListView(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 12,
-                  ),
-                  children: [
-                    _Header(
-                      onSearch: () => _showSearchDialog(bloc),
-                      lunarFocus: _lunarFocus,
-                      onToggleFocus: () {
-                        setState(() => _lunarFocus = !_lunarFocus);
-                      },
+                child: RefreshIndicator(
+                  onRefresh: () async {
+                    bloc.add(const TodaySelected());
+                  },
+                  child: ListView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 12,
                     ),
-                    const SizedBox(height: 12),
-                    GestureDetector(
-                      onHorizontalDragEnd: (details) {
-                        if (details.primaryVelocity == null) return;
-                        if (details.primaryVelocity! < 0) {
-                          bloc.add(const NextSelected());
-                        } else if (details.primaryVelocity! > 0) {
-                          bloc.add(const PreviousSelected());
-                        }
-                      },
-                      child: _TodayCard(
-                        solar: solar,
-                        lunar: lunar,
-                        bloc: bloc,
+                    children: [
+                      _Header(
+                        onSearch: () => _showSearchDialog(bloc),
                         lunarFocus: _lunarFocus,
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    GestureDetector(
-                      onHorizontalDragEnd: (details) {
-                        if (details.primaryVelocity == null) return;
-                        final prevMonth = DateTime(
-                          solar.year,
-                          solar.month + (details.primaryVelocity! < 0 ? 1 : -1),
-                          solar.day.clamp(1, 28),
-                        );
-                        bloc.add(SolarSelected(solar: prevMonth));
-                      },
-                      child: _MonthCalendar(
-                        selectedDate: solar,
-                        selectedLunar: lunar,
-                        lunarFocus: _lunarFocus,
-                        onDateSelected: (date) {
-                          bloc.add(SolarSelected(solar: date));
+                        onToggleFocus: () {
+                          setState(() => _lunarFocus = !_lunarFocus);
                         },
                       ),
-                    ),
-                    const SizedBox(height: 12),
-                    _InfoPanel(lunar: lunar),
-                    const SizedBox(height: 12),
-                    _Footer(selectedYear: solar.year),
-                    const SizedBox(height: 24),
-                  ],
+                      const SizedBox(height: 12),
+                      GestureDetector(
+                        onHorizontalDragEnd: (details) {
+                          if (details.primaryVelocity == null) return;
+                          if (details.primaryVelocity! < 0) {
+                            bloc.add(const NextSelected());
+                          } else if (details.primaryVelocity! > 0) {
+                            bloc.add(const PreviousSelected());
+                          }
+                        },
+                        child: _TodayCard(
+                          solar: solar,
+                          lunar: lunar,
+                          bloc: bloc,
+                          lunarFocus: _lunarFocus,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      GestureDetector(
+                        onHorizontalDragEnd: (details) {
+                          if (details.primaryVelocity == null) return;
+                          final prevMonth = DateTime(
+                            solar.year,
+                            solar.month +
+                                (details.primaryVelocity! < 0 ? 1 : -1),
+                            solar.day.clamp(1, 28),
+                          );
+                          bloc.add(SolarSelected(solar: prevMonth));
+                        },
+                        child: _MonthCalendar(
+                          selectedDate: solar,
+                          selectedLunar: lunar,
+                          lunarFocus: _lunarFocus,
+                          onDateSelected: (date) {
+                            bloc.add(SolarSelected(solar: date));
+                          },
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      _InfoPanel(lunar: lunar),
+                      const SizedBox(height: 12),
+                      _Footer(selectedYear: solar.year),
+                      const SizedBox(height: 24),
+                    ],
+                  ),
                 ),
               ),
             ),
