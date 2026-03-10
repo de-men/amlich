@@ -1,43 +1,58 @@
 import 'package:equatable/equatable.dart';
 
 abstract class MainEvent extends Equatable {
+  const MainEvent();
+
+  @override
   List<Object?> get props => const [];
 }
 
 class AppStarted extends MainEvent {
+  const AppStarted();
+
   @override
   String toString() => 'AppStarted';
 }
 
 class SolarChanged extends MainEvent {
+  const SolarChanged();
+
   @override
   String toString() => 'SolarChanged';
 }
 
 class LunarChanged extends MainEvent {
+  const LunarChanged();
+
   @override
   String toString() => 'LunarChanged';
 }
 
 class TodaySelected extends MainEvent {
+  const TodaySelected();
+
   @override
   String toString() => 'TodaySelected';
 }
 
 class PreviousSelected extends MainEvent {
+  const PreviousSelected();
+
   @override
   String toString() => 'PreviousSelected';
 }
 
 class NextSelected extends MainEvent {
+  const NextSelected();
+
   @override
   String toString() => 'NextSelected';
 }
 
 class SolarSelected extends MainEvent {
-  final DateTime? solar;
+  const SolarSelected({required this.solar});
 
-  SolarSelected({required this.solar});
+  final DateTime? solar;
 
   @override
   String toString() => 'SolarSelected { solar: $solar }';
@@ -47,9 +62,9 @@ class SolarSelected extends MainEvent {
 }
 
 class LunarSelected extends MainEvent {
-  final String? lunar;
+  const LunarSelected({required this.lunar});
 
-  LunarSelected({required this.lunar});
+  final String? lunar;
 
   @override
   String toString() => 'LunarSelected { lunar: $lunar }';

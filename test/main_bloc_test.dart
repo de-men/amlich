@@ -9,15 +9,20 @@ void main() {
     mainBloc = MainBloc(DateTime.now());
   });
 
-  test('initial state is correct', () {
-    expect(mainBloc.state, MainUninitialized());
+  tearDown(() async {
+    await mainBloc.close();
   });
 
-  test('dispose does not emit new states', () {
-    expectLater(
-      mainBloc.state,
-      emitsInOrder([MainUninitialized(), emitsDone]),
+  test('initial state is correct', () {
+    expect(mainBloc.state, const MainUninitialized());
+  });
+
+  test('close does not emit new states', () async {
+    final future = expectLater(
+      mainBloc.stream,
+      emitsInOrder(<dynamic>[emitsDone]),
     );
-    mainBloc.close();
+    await mainBloc.close();
+    await future;
   });
 }

@@ -1,7 +1,6 @@
-@JS() // sets the context, in this case being `window`
-library main; // required library declaration
+import 'dart:js_interop';
 
-import 'package:js/js.dart'; // Pull in our dependency
+@JS('open')
+external void _open(JSString url);
 
-@JS('open') // annotates `open` function to call `open`
-external void open(dynamic str);
+void open(String url) => _open(url.toJS);
